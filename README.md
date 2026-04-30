@@ -1,18 +1,95 @@
-# React + Vite
+# SportSeat
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**SportSeat** is a modern web-based ticket booking platform built exclusively for sports events.  
+It allows users to explore upcoming matches, view detailed event information, select stadium seats interactively, and book tickets through a seamless and intuitive interface.
 
-Currently, two official plugins are available:
+Inspired by platforms like BookMyShow, SportSeat focuses purely on **sports experiences** with a cleaner, faster, and more engaging UI.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- Explore upcoming sports events across multiple categories
+- View detailed match information (teams, venue, timings)
+- Interactive stadium seat selection
+- Smooth and user-friendly ticket booking flow
+- Authentication and user management
+- Fast and responsive UI
+- Modern animations and transitions
 
-Note: This will impact Vite dev & build performances.
+---
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Frontend
+- React
+- JavaScript (JSX)
+- Tailwind CSS
+
+### Backend & Services
+- Firebase (Authentication, Database)
+- Vercel (Hosting)
+
+### Animations & UI
+- GSAP (GreenSock Animation Platform)
+
+### Other Tools
+- Git & GitHub
+- REST APIs 
+
+---
+
+## Project Structure
+
+```
+sportseat/
+│
+├── public/            # Static assets
+├── src/
+│   ├── components/    # Reusable UI components
+│   ├── pages/         # Application pages
+│   ├── hooks/         # Custom hooks
+│   ├── services/      # Firebase & API logic
+│   ├── utils/         # Helper functions
+│   ├── assets/        # Images, icons
+│   └── App.jsx
+│
+├── tailwind.config.js
+├── package.json
+└── README.md
+```
+
+---
+
+## Installation & Setup
+
+1. Clone the repository:
+```
+git clone https://github.com/heyykrishnna/sportseat.git
+```
+
+2. Navigate to the project:
+```
+cd sportseat
+```
+
+3. Install dependencies:
+```
+npm install
+```
+
+4. Start the development server:
+```
+npm run dev
+```
+
+---
+
+## Future Enhancements
+
+- Payment gateway integration
+- Real-time seat availability system
+- AI-based event recommendations
+- Admin dashboard for event management
+
+---
