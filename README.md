@@ -27,7 +27,7 @@ Inspired by platforms like BookMyShow, SportSeat focuses purely on **sports expe
 - Tailwind CSS
 
 ### Backend & Services
-- Firebase (Authentication, Database)
+- Supabase (Authentication, Database)
 - Vercel (Hosting)
 
 ### Animations & UI
@@ -49,7 +49,7 @@ sportseat/
 │   ├── components/    # Reusable UI components
 │   ├── pages/         # Application pages
 │   ├── hooks/         # Custom hooks
-│   ├── services/      # Firebase & API logic
+│   ├── services/      # Supabase & API logic
 │   ├── utils/         # Helper functions
 │   ├── assets/        # Images, icons
 │   └── App.jsx
