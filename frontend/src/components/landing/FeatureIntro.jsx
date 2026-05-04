@@ -31,7 +31,7 @@ function FeatureIntro() {
           {pillars.map((pillar) => (
             <article key={pillar.label} className="rounded-[6px] border border-[#dfe3dc] bg-white p-5">
               <p className="text-xs font-black uppercase text-[#639cba]">{pillar.label}</p>
-              <h3 className="mt-3 text-base font-black leading-snug text-[#172421]">{pillar.title}</h3>
+              <h3 className="mt-3 text-base font-semibold leading-snug text-[#172421]">{pillar.title}</h3>
             </article>
           ))}
         </div>
