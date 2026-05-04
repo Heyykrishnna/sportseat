@@ -1,46 +1,138 @@
+import basketballHero from '../../assets/landing/basketball-hero.png'
+import cricketDetail from '../../assets/landing/cricket-detail.png'
+import soccerDetail from '../../assets/landing/soccer-detail.png'
 import tennisAction from '../../assets/landing/tennis-action.png'
+
+const bookingCards = [
+  {
+    sport: 'Basketball',
+    title: 'Courtside Pass',
+    venue: 'Metro Arena',
+    date: 'May 18',
+    seats: '42 seats left',
+    price: '$48',
+    image: basketballHero,
+  },
+  {
+    sport: 'Football',
+    title: 'Derby Night',
+    venue: 'City Stadium',
+    date: 'May 24',
+    seats: '118 seats left',
+    price: '$36',
+    image: soccerDetail,
+  },
+  {
+    sport: 'Tennis',
+    title: 'Finals Entry',
+    venue: 'Blue Court',
+    date: 'Jun 02',
+    seats: '26 seats left',
+    price: '$52',
+    image: tennisAction,
+  },
+  {
+    sport: 'Cricket',
+    title: 'Weekend Stand',
+    venue: 'North Ground',
+    date: 'Jun 08',
+    seats: '74 seats left',
+    price: '$29',
+    image: cricketDetail,
+  },
+]
+
+const competitionCards = [
+  {
+    value: '128',
+    title: 'Open player slots',
+    text: 'Waitlists and team approvals keep registrations controlled.',
+    image: tennisAction,
+  },
+  {
+    value: '24',
+    title: 'Court sessions',
+    text: 'Time blocks are organized for players and spectators.',
+    image: soccerDetail,
+  },
+]
 
 function TournamentShowcase() {
   return (
-    <section id="tournaments" className="grid gap-8 px-5 py-12 sm:px-8 lg:grid-cols-[0.72fr_1fr] lg:px-12 lg:py-16">
-      <div className="flex flex-col justify-between">
-        <div>
-          <p className="w-fit rounded-full bg-[#6fb1d2] px-4 py-2 text-xs font-black uppercase text-white">
-            Trending tournament
-          </p>
-          <h2 className="mt-5 text-4xl font-black leading-[0.95] sm:text-5xl">
-            Tennis Clash: The Ultimate Showdown!
-          </h2>
+    <section id="tournaments" className="px-5 py-10 sm:px-8 lg:px-12 lg:py-12">
+      <div className="grid gap-6 lg:grid-cols-[0.58fr_1fr]">
+        <div className="flex flex-col justify-between">
+          <div>
+            <p className="w-fit rounded-full bg-[#6fb1d2] px-4 py-2 text-xs font-black uppercase text-white">
+              Trending tournament
+            </p>
+            <h2 className="mt-4 text-3xl font-black leading-[0.95] sm:text-4xl">
+              Tennis Clash: The Ultimate Showdown!
+            </h2>
+          </div>
+          <div className="mt-6 max-w-sm">
+            <p className="text-sm font-semibold leading-6 text-[#5c6965]">
+              Sell entries, manage player slots, publish match times, and keep spectators ready for every round.
+            </p>
+            <a
+              className="mt-5 inline-flex rounded-full border border-[#172421] px-5 py-3 text-sm font-black text-[#253733] transition hover:bg-[#172421] hover:text-white"
+              href="#guide"
+            >
+              Plan An Event
+            </a>
+          </div>
         </div>
-        <div className="mt-8 max-w-sm">
-          <p className="text-sm font-semibold leading-6 text-[#5c6965]">
-            Serve, score, and scale your competition with seedings, match slots, player registrations, and automated standings.
-          </p>
-          <a
-            className="mt-6 inline-flex rounded-full border border-[#172421] px-5 py-3 text-sm font-black text-[#253733] transition"
-            href="#guide"
-          >
-            Plan An Event
-          </a>
+
+        <div className="grid gap-4 sm:grid-cols-[1fr_0.55fr]">
+          <div className="overflow-hidden rounded-[8px] bg-[#6fb1d2]">
+            <img className="h-full min-h-[340px] w-full object-cover object-center" src={tennisAction} alt="Tennis player jumping for a shot" />
+          </div>
+          <div className="grid gap-4">
+            {competitionCards.map((card) => (
+              <article key={card.title} className="relative min-h-[220px] overflow-hidden rounded-[8px] text-white">
+                <img className="absolute inset-0 h-full w-full object-cover" src={card.image} alt="" />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,19,17,0.1),rgba(10,19,17,0.76))]" />
+                <div className="relative flex h-full min-h-[220px] flex-col justify-end p-5">
+                  <p className="text-4xl font-black leading-none">{card.value}</p>
+                  <h3 className="mt-3 text-base font-black">{card.title}</h3>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-white/82">{card.text}</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-[1fr_0.55fr]">
-        <div className="overflow-hidden rounded-[6px] bg-[#6fb1d2]">
-          <img className="h-full min-h-[420px] w-full object-cover object-center" src={tennisAction} alt="Tennis player jumping for a shot" />
-        </div>
-        <div className="grid gap-4">
-          <article className="rounded-[6px] bg-white p-5">
-            <p className="text-4xl font-black leading-none">128</p>
-            <h3 className="mt-3 text-base font-black">Open player slots</h3>
-            <p className="mt-2 text-sm font-semibold leading-6 text-[#66736f]">Waitlists and team approvals keep registrations controlled.</p>
-          </article>
-          <article className="rounded-[6px] bg-[#ddebc7] p-5">
-            <p className="text-4xl font-black leading-none">24</p>
-            <h3 className="mt-3 text-base font-black">Court sessions</h3>
-            <p className="mt-2 text-sm font-semibold leading-6 text-[#5d6d52]">Time blocks are organized for players and spectators.</p>
-          </article>
-        </div>
+      <div className="mt-8 flex snap-x gap-4 overflow-x-auto pb-4 scroll-smooth [scrollbar-width:thin]">
+        {bookingCards.map((card) => (
+          <a
+            key={card.title}
+            className="group relative min-h-[340px] w-[82vw] flex-none snap-start overflow-hidden rounded-[8px] text-white shadow-[0_16px_40px_rgba(23,36,33,0.12)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_22px_56px_rgba(23,36,33,0.2)] sm:w-[46vw] lg:w-[calc((100vw-9rem)/3.5)]"
+            href="#guide"
+          >
+            <img className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105" src={card.image} alt="" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(7,17,15,0.8),rgba(7,17,15,0.46)_48%,rgba(7,17,15,0.1))]" />
+            <div className="absolute right-5 top-5 grid h-12 w-12 translate-y-2 place-items-center rounded-full border border-white/70 bg-white/22 text-xl font-black text-white opacity-0 shadow-[0_14px_34px_rgba(7,17,15,0.22)] backdrop-blur-xl transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+              &rarr;
+            </div>
+            <div className="relative flex min-h-[340px] max-w-[82%] flex-col justify-between gap-8 p-6 sm:max-w-[68%]">
+              <div>
+                <p className="text-xs font-black uppercase text-white/70">{card.sport}</p>
+                <h3 className="mt-3 text-2xl font-black leading-[1.02] text-white sm:text-3xl">{card.title}</h3>
+                <p className="mt-4 text-sm font-bold text-white/78">{card.venue}</p>
+              </div>
+              <div className="grid grid-cols-[1fr_auto] items-end gap-4">
+                <div>
+                  <p className="text-sm font-black text-white">{card.date}</p>
+                  <p className="mt-1 text-xs font-bold text-white/72">{card.seats}</p>
+                </div>
+                <p className="rounded-full bg-white px-4 py-2 text-sm font-black text-[#172421] shadow-[0_10px_24px_rgba(7,17,15,0.16)]">
+                  {card.price}
+                </p>
+              </div>
+            </div>
+          </a>
+        ))}
       </div>
     </section>
   )
