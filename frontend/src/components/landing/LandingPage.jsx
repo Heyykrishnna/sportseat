@@ -2,7 +2,6 @@ import CTAFooter from './CTAFooter'
 import FeatureIntro from './FeatureIntro'
 import GuideSection from './GuideSection'
 import Hero from './Hero'
-import OrganizerBenefits from './OrganizerBenefits'
 import StatsSection from './StatsSection'
 import TournamentShowcase from './TournamentShowcase'
 
@@ -12,7 +11,6 @@ function LandingPage() {
       <Hero />
       <TournamentShowcase />
       <FeatureIntro />
-      <OrganizerBenefits />
       <StatsSection />
       <GuideSection />
       <CTAFooter />
