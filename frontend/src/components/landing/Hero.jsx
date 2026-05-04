@@ -21,7 +21,7 @@ function Hero() {
             </h1>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <a
-                className="rounded-full bg-white px-6 py-3 text-sm font-black text-[#172421] shadow-[0_16px_32px_rgba(23,36,33,0.2)] transition hover:bg-[#edf4f7]"
+                className="rounded-full border font-black border-[#172421] px-6 py-3 text-sm text-[#172421] transition"
                 href="#tournaments"
               >
                 Create Tournament
