@@ -9,7 +9,7 @@ function GuideSection() {
     <section id="guide" className="px-5 py-12 text-center sm:px-8 lg:px-12 lg:py-16">
       <div className="mx-auto max-w-3xl">
         <p className="text-xs font-black uppercase text-[#6f9db4]">Setup guide</p>
-        <h2 className="mt-4 text-4xl font-black leading-[1] sm:text-5xl">
+        <h2 className="mt-4 text-4xl font-black leading-none sm:text-5xl">
           Guide to Setting Up Events, Tracking Progress, and Managing Participants.
         </h2>
       </div>
