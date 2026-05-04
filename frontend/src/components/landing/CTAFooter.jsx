@@ -5,23 +5,6 @@ function CTAFooter() {
     <footer id="faq" className="relative overflow-hidden bg-white px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-[#edf4f7]/80 via-white to-white pointer-events-none" />
 
-      <div className="relative z-10 mx-auto max-w-6xl text-center">
-        <span className="inline-block rounded-full bg-[#edf4f7] px-4 py-1.5 text-xs font-black uppercase tracking-widest text-[#78995a] ring-1 ring-[#78995a]/20">
-          Ready to host your next tournament?
-        </span>
-        
-        <h2 className="mt-8 text-[clamp(3.5rem,10vw,9rem)] font-black leading-[0.8] tracking-tighter text-[#172421] transition-transform duration-700 hover:scale-[1.02]">
-          LET'S GO!
-        </h2>
-        
-        <a
-          className="mt-12 inline-flex items-center justify-center rounded-full border border-[#172421] px-10 py-5 text-sm font-black text-[#253733] transition-all duration-300"
-          href="#top"
-        >
-          Launch SportSeat
-        </a>
-      </div>
-
       <div className="relative z-10 mx-auto mt-28 max-w-7xl grid gap-10 border-t border-[#dfe3dc] pt-12 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
         <div className="max-w-md text-left">
           <p className="text-lg font-black uppercase tracking-wider text-[#172421]">SportSeat</p>
