@@ -17,7 +17,7 @@ function TournamentShowcase() {
             Serve, score, and scale your competition with seedings, match slots, player registrations, and automated standings.
           </p>
           <a
-            className="mt-6 inline-flex rounded-full bg-[#172421] px-5 py-3 text-sm font-black text-white transition hover:bg-[#253733]"
+            className="mt-6 inline-flex rounded-full border border-[#172421] px-5 py-3 text-sm font-black text-[#253733] transition"
             href="#guide"
           >
             Plan An Event

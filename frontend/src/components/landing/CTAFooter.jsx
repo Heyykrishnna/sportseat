@@ -15,15 +15,10 @@ function CTAFooter() {
         </h2>
         
         <a
-          className="group relative mt-12 inline-flex items-center justify-center overflow-hidden rounded-full bg-[#172421] px-10 py-5 text-sm font-black text-white transition-all duration-300 hover:bg-[#253733] hover:shadow-[0_8px_30px_rgb(23,36,33,0.3)] hover:-translate-y-1"
+          className="mt-12 inline-flex items-center justify-center rounded-full border border-[#172421] px-10 py-5 text-sm font-black text-[#253733] transition-all duration-300"
           href="#top"
         >
-          <span className="relative z-10 transition-transform duration-300 group-hover:-translate-y-12">
-            Launch SportSeat
-          </span>
-          <span className="absolute inset-0 z-10 flex translate-y-12 items-center justify-center transition-transform duration-300 group-hover:translate-y-0">
-            Launch SportSeat
-          </span>
+          Launch SportSeat
         </a>
       </div>
 
@@ -39,10 +34,10 @@ function CTAFooter() {
           {footerLinks.map((link) => (
             <a 
               key={link} 
-              className="group relative overflow-hidden rounded-full border border-[#dfe3dc] bg-white px-7 py-3 text-sm font-black text-[#172421] transition-all duration-300 hover:border-[#172421] hover:bg-[#172421] hover:text-white hover:-translate-y-1 hover:shadow-lg" 
+              className="rounded-full border border-[#dfe3dc] bg-white px-7 py-3 text-sm font-black text-[#172421] transition-all duration-300 hover:border-[#172421] hover:bg-[#172421] hover:text-white hover:-translate-y-1 hover:shadow-lg" 
               href="#top"
             >
-              <span className="relative z-10">{link}</span>
+              {link}
             </a>
           ))}
         </div>
