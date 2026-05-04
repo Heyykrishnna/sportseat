@@ -12,19 +12,11 @@ function Hero() {
         alt="Basketball player holding a ball against a blue sky"
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(36,106,145,0.62),rgba(36,106,145,0.12)_56%,rgba(36,106,145,0.3))]" />
-      <div className="absolute inset-x-0 top-28 z-10 px-5 sm:px-8 lg:top-32 lg:px-12">
-        <p className="text-[clamp(4.8rem,18vw,15.5rem)] font-black leading-[0.76] text-white/86">
-          SPORTSEAT
-        </p>
-      </div>
 
       <div className="relative z-20 flex min-h-[640px] items-end px-5 pb-10 pt-32 sm:px-8 md:min-h-[760px] lg:px-12 lg:pb-14">
         <div className="grid w-full gap-8 lg:grid-cols-[minmax(0,0.78fr)_minmax(240px,0.28fr)] lg:items-end">
           <div className="max-w-xl">
-            <p className="mb-4 w-fit rounded-full bg-white/16 px-4 py-2 text-xs font-bold uppercase backdrop-blur">
-              Sports tournament platform
-            </p>
-            <h1 className="max-w-[13ch] text-[clamp(2.45rem,5.8vw,5.7rem)] font-black leading-[0.88]">
+            <h1 className="text-4xl font-light leading-[0.88]">
               Organize and Join The Tournaments
             </h1>
             <div className="mt-8 flex flex-wrap items-center gap-3">

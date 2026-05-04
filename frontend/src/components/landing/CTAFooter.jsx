@@ -7,7 +7,7 @@ function CTAFooter() {
         <p className="text-sm font-black uppercase text-[#78995a]">Ready to host your next tournament?</p>
         <h2 className="mt-3 text-[clamp(3rem,9vw,8rem)] font-black leading-[0.78] text-[#172421]">LET'S GO!</h2>
         <a
-          className="mt-8 inline-flex rounded-full bg-[#172421] px-8 py-4 text-sm font-black text-white transition hover:bg-[#253733]"
+          className="mt-8 inline-flex rounded-full bg-[#172421] px-8 py-4 text-sm font-black text-white transition hover:bg-[#253733] hover:text-white"
           href="#top"
         >
           Launch SportSeat
