@@ -1,95 +1,84 @@
 # SportSeat
 
-**SportSeat** is a modern web-based ticket booking platform built exclusively for sports events.  
-It allows users to explore upcoming matches, view detailed event information, select stadium seats interactively, and book tickets through a seamless and intuitive interface.
+SportSeat is a web app for discovering sports events and booking stadium seats—focused on sports only, with a clear flow from browsing matches to choosing seats and confirming tickets.
 
-Inspired by platforms like BookMyShow, SportSeat focuses purely on **sports experiences** with a cleaner, faster, and more engaging UI.
+The repository currently ships a **marketing-style landing experience** in React. A **data model** for users, events, venues, tickets, and bookings is documented under `backend/` for when you connect a real API or database.
 
----
+## What you get today
 
-## Features
+- Landing page sections: hero, features, tournaments, stats, guide, and call-to-action
+- Responsive layout and styling with **Tailwind CSS v4**
+- **Vite** dev server and production build for fast local development
 
-- Explore upcoming sports events across multiple categories
-- View detailed match information (teams, venue, timings)
-- Interactive stadium seat selection
-- Smooth and user-friendly ticket booking flow
-- Authentication and user management
-- Fast and responsive UI
-- Modern animations and transitions
+## Planned product surface
 
----
+Ideas aligned with the domain schema (see `backend/schema.md`):
 
-## Tech Stack
+- Event listings and detail pages with venue and timing information
+- Interactive seat map and ticket selection
+- Sign-in and profiles; bookings and payment confirmation references
 
-### Frontend
-- React
-- JavaScript (JSX)
-- Tailwind CSS
+## Tech stack
 
-### Backend & Services
-- Supabase (Authentication, Database)
-- Vercel (Hosting)
+| Area        | Choice                          |
+| ----------- | ------------------------------- |
+| UI          | React 19, JSX                   |
+| Styling     | Tailwind CSS 4, `@tailwindcss/vite` |
+| Tooling     | Vite 8, ESLint                  |
+| Compiler    | Babel + React Compiler plugin   |
 
-### Animations & UI
-- GSAP (GreenSock Animation Platform)
+## Requirements
 
-### Other Tools
-- Git & GitHub
-- REST APIs 
+- **Node.js** — current LTS (e.g. 20.x or 22.x) recommended  
+- **npm** (comes with Node)
 
----
+## Getting started
 
-## Project Structure
+Clone the repository, then install and run the frontend:
 
-```
-sportseat/
-│
-├── public/            # Static assets
-├── src/
-│   ├── components/    # Reusable UI components
-│   ├── pages/         # Application pages
-│   ├── hooks/         # Custom hooks
-│   ├── services/      # Supabase & API logic
-│   ├── utils/         # Helper functions
-│   ├── assets/        # Images, icons
-│   └── App.jsx
-│
-├── tailwind.config.js
-├── package.json
-└── README.md
-```
-
----
-
-## Installation & Setup
-
-1. Clone the repository:
-```
+```bash
 git clone https://github.com/heyykrishnna/sportseat.git
-```
-
-2. Navigate to the project:
-```
-cd sportseat
-```
-
-3. Install dependencies:
-```
+cd sportseat/frontend
 npm install
-```
-
-4. Start the development server:
-```
 npm run dev
 ```
 
----
+Open the URL Vite prints (typically `http://localhost:5173`).
 
-## Future Enhancements
+### Other scripts
 
-- Payment gateway integration
-- Real-time seat availability system
-- AI-based event recommendations
-- Admin dashboard for event management
+| Command        | Purpose                    |
+| -------------- | -------------------------- |
+| `npm run dev`  | Start dev server with HMR  |
+| `npm run build`| Production build to `dist/` |
+| `npm run preview` | Serve the production build locally |
+| `npm run lint` | Run ESLint on the project  |
 
----
+## Repository layout
+
+```
+sportseat/
+├── frontend/
+│   ├── public/                 # Static files (favicon, icons)
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── landing/      # Landing page sections
+│   │   ├── assets/           # Images and static media
+│   │   ├── App.jsx
+│   │   ├── main.jsx
+│   │   └── index.css
+│   ├── index.html
+│   ├── vite.config.js
+│   └── package.json
+├── backend/
+│   └── schema.md             # Domain / table-oriented data model (reference)
+└── README.md
+```
+
+## Contributing
+
+Issues and pull requests are welcome. For larger changes, opening an issue first helps align on direction.
+
+## Author
+
+Maintained by [@heyykrishnna](https://github.com/heyykrishnna).
