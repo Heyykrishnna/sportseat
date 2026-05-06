@@ -28,8 +28,8 @@ function EventCard({ event }) {
           </p>
           <h3 className="mt-1.5 text-lg font-black leading-snug text-[#172421]">{event.title}</h3>
           <p className="mt-0.5 text-xs font-semibold text-[#68736f]">{event.subtitle}</p>
-          <p className="mt-2 text-xs text-[#68736f]">
-            <span className="inline-block">📍</span> {event.venue}
+          <p className="mt-2 text-xs font-bold text-[#68736f]">
+           {event.venue}
           </p>
         </div>
 

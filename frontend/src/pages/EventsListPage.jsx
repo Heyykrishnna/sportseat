@@ -2,6 +2,7 @@ import { useState } from 'react'
 import EventCard from '../components/events/EventCard'
 import PageHeader from '../components/shared/PageHeader'
 import { events } from '../data/events'
+import CTAFooter from '../components/landing/CTAFooter'
 
 const sports = ['All', 'Football', 'Basketball', 'Cricket', 'Tennis']
 
@@ -59,14 +60,7 @@ function EventsListPage() {
         </div>
       </main>
 
-      <footer className="border-t border-[#dfe3dc] px-5 py-10 sm:px-8 lg:px-12">
-        <div className="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
-          <p className="text-sm font-black uppercase tracking-widest text-[#172421]">SportSeat</p>
-          <p className="text-xs font-semibold text-[#68736f]">
-            © 2026 SportSeat. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <CTAFooter />
     </div>
   )
 }

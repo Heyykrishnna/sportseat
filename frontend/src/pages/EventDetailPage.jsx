@@ -4,6 +4,7 @@ import EventRating from '../components/events/EventRating'
 import BookingPanel from '../components/events/BookingPanel'
 import EventGallery from '../components/events/EventGallery'
 import { getEventBySlug } from '../data/events'
+import CTAFooter from '../components/landing/CTAFooter'
 
 function EventDetailPage() {
   const { slug } = useParams()
@@ -108,17 +109,7 @@ function EventDetailPage() {
         </div>
       </main>
 
-      <footer className="mt-20 border-t border-[#dfe3dc] bg-[#f6f5ef] px-5 py-12 sm:px-8 lg:px-12">
-        <div className="container mx-auto flex flex-col items-center justify-between gap-6 text-center sm:flex-row sm:text-left">
-          <div>
-            <p className="text-lg font-black uppercase tracking-wider text-[#172421]">SportSeat</p>
-            <p className="mt-2 text-xs font-semibold text-[#68736f]">The ultimate platform for sports event management and ticketing.</p>
-          </div>
-          <p className="text-xs font-semibold text-[#68736f]">
-            © 2026 SportSeat. Built with passion for sports.
-          </p>
-        </div>
-      </footer>
+      <CTAFooter />
     </div>
   )
 }
