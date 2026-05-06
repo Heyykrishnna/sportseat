@@ -1,4 +1,10 @@
-const navItems = ['About', 'Tournaments', 'Participants', 'Teams', 'FAQ']
+const navItems = [
+  {name: 'About', path: "/about"},
+  {name: 'Tournaments', path: "/tournaments"},
+  {name: 'Participants', path: "/participants"},
+  {name: 'Teams', path: "/teams"}, 
+  {name: 'FAQ', path: "/faq"}
+]
 
 function Header() {
   return (
@@ -9,8 +15,8 @@ function Header() {
 
       <nav className="hidden items-center gap-7 rounded-full bg-white/10 px-5 py-2 text-xs font-semibold backdrop-blur md:flex">
         {navItems.map((item) => (
-          <a key={item} className="transition hover:text-[#d9ecf7]" href={`#${item.toLowerCase()}`}>
-            {item}
+          <a key={item.name} className="transition hover:text-[#d9ecf7]" href={item.path}>
+            {item.name}
           </a>
         ))}
       </nav>
