@@ -6,9 +6,29 @@ import { eventsRouter } from './routes/events.js'
 
 const app = express()
 
+const normalizeOrigin = (origin) => origin.replace(/\/+$/, '')
+const allowedOrigins = new Set([
+  normalizeOrigin(env.FRONTEND_URL),
+  ...env.FRONTEND_URLS.map(normalizeOrigin),
+  'http://localhost:5173',
+  'https://sportseat.vercel.app',
+])
+
 app.use(
   cors({
-    origin: env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      if (!origin) {
+        callback(null, true)
+        return
+      }
+
+      if (allowedOrigins.has(normalizeOrigin(origin))) {
+        callback(null, true)
+        return
+      }
+
+      callback(new Error(`CORS blocked for origin: ${origin}`))
+    },
     credentials: false,
   }),
 )

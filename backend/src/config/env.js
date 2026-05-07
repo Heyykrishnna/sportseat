@@ -9,6 +9,17 @@ const schema = z.object({
   SUPABASE_ANON_KEY: z.string().min(20),
   PORT: z.coerce.number().int().positive().default(4000),
   FRONTEND_URL: z.string().url().default('http://localhost:5173'),
+  FRONTEND_URLS: z
+    .string()
+    .optional()
+    .transform((value) =>
+      value
+        ? value
+            .split(',')
+            .map((origin) => origin.trim())
+            .filter(Boolean)
+        : [],
+    ),
 })
 
 const parsed = schema.safeParse(process.env)
