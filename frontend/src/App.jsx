@@ -1,4 +1,5 @@
 import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { SearchProvider } from './context/SearchContext'
 import LandingPage from './components/landing/LandingPage'
 import EventsListPage from './pages/EventsListPage'
 import EventDetailPage from './pages/EventDetailPage'
@@ -13,6 +14,7 @@ import TermsPage from './pages/TermsPage'
 
 
 
+
 function AppLayout() {
   const { pathname } = useLocation()
   const isHome = pathname === '/'
@@ -21,7 +23,7 @@ function AppLayout() {
   const isAuth = pathname === '/auth'
 
   return (
-    <>
+    <><SearchProvider>
       {!isAuth && (
         <PageHeader 
           transparent={isHome || isEventDetail} 
@@ -30,6 +32,7 @@ function AppLayout() {
         />
       )}
       <Outlet />
+      </SearchProvider>
     </>
   )
 }
