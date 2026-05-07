@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Info, Calendar, MapPin, CheckCircle2, Download, Home, Share2, Ticket, User, CreditCard } from "lucide-react";
+import { QRCodeSVG } from 'qrcode.react';
 import { getEventBySlug } from '../data/events';
 
 const SeatBookingPage = () => {
@@ -195,19 +196,29 @@ const SeatBookingPage = () => {
               
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-10">Entry Pass</p>
               
-              <div className="w-full aspect-square bg-white rounded-[32px] p-6 mb-8 relative group">
-                <div className="w-full h-full bg-gray-50 rounded-2xl grid grid-cols-4 grid-rows-4 gap-2 opacity-80">
-                  {Array.from({ length: 16 }).map((_, i) => (
-                    <div key={i} className={`rounded-sm ${Math.random() > 0.4 ? 'bg-[#1A1C1E]' : 'bg-gray-200'}`}></div>
-                  ))}
-                </div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-12 h-12 bg-white rounded-xl shadow-xl flex items-center justify-center p-2">
-                     <div className="w-full h-full bg-[#1A1C1E] rounded-md flex items-center justify-center">
-                        <span className="text-[8px] font-black text-white">SS</span>
-                     </div>
-                  </div>
-                </div>
+              <div className="w-full aspect-square bg-white rounded-[32px] p-6 mb-8 relative group flex items-center justify-center">
+                <QRCodeSVG
+                  value={JSON.stringify({
+                    orderId,
+                    event: event.title,
+                    venue: event.venue,
+                    date: event.date,
+                    time: event.time,
+                    seats: selectedSeats.map(s => s.replace('-', '')),
+                    customer: 'Piyush Yadav'
+                  })}
+                  size={200}
+                  level="H"
+                  includeMargin={false}
+                  imageSettings={{
+                    src: "/favicon.ico",
+                    x: undefined,
+                    y: undefined,
+                    height: 40,
+                    width: 40,
+                    excavate: true,
+                  }}
+                />
               </div>
 
               <div className="text-center space-y-2 mb-10">
