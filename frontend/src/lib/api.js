@@ -47,3 +47,20 @@ export async function createEvent(eventData) {
   return payload.data
 }
 
+export async function createBooking(bookingData) {
+  const payload = await request('/api/bookings', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(bookingData),
+  })
+  return payload.data
+}
+
+export async function getOccupiedSeats(slug) {
+  const payload = await request(`/api/bookings/occupied/${slug}`)
+  return payload.data ?? []
+}
+
+

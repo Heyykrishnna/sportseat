@@ -2,34 +2,43 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Info, Calendar, MapPin, Download, Home, Share2, Ticket, User, CreditCard } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
-import { getEventBySlug } from '../lib/api';
+import { getEventBySlug, getOccupiedSeats, createBooking } from '../lib/api';
 
 const SeatBookingPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [event, setEvent] = useState(null);
+  const [occupiedSeats, setOccupiedSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [customerEmail, setCustomerEmail] = useState('');
+  const [bookingData, setBookingData] = useState(null);
   
   useEffect(() => {
     let mounted = true;
 
-    async function loadEvent() {
+    async function loadData() {
       try {
-        const eventData = await getEventBySlug(slug);
+        const [eventData, occupiedData] = await Promise.all([
+          getEventBySlug(slug),
+          getOccupiedSeats(slug)
+        ]);
+        
         if (mounted) {
           setEvent(eventData);
+          setOccupiedSeats(occupiedData);
         }
-      } catch {
+      } catch (err) {
+        console.error('Failed to load data:', err);
         if (mounted) {
           setEvent(null);
         }
       }
     }
 
-    loadEvent();
+    loadData();
 
     return () => {
       mounted = false;
@@ -47,16 +56,32 @@ const SeatBookingPage = () => {
     );
   }
 
-  const handlePayment = () => {
+  const handlePayment = async () => {
+    if (!customerEmail) {
+      alert('Please enter your email to proceed.');
+      return;
+    }
+
     setIsProcessing(true);
-    setTimeout(() => {
-      setIsProcessing(false);
-      setOrderId(`SPT-${crypto.randomUUID().slice(0, 9).toUpperCase()}`);
+    try {
+      const result = await createBooking({
+        customerEmail,
+        eventSlug: slug,
+        seats: selectedSeats
+      });
+      
+      setBookingData(result);
+      setOrderId(result.booking_reference);
       setIsSuccess(true);
-    }, 2000);
+    } catch (err) {
+      alert(err.message || 'Booking failed. Please try again.');
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const parsePrice = (priceStr) => {
+    if (!priceStr) return 0;
     return parseInt(priceStr.replace(/[^\d]/g, ''));
   };
 
@@ -71,7 +96,6 @@ const SeatBookingPage = () => {
   ];
 
   const seatsPerRow = 14;
-  const occupiedSeats = ['A-5', 'A-6', 'C-2', 'C-3', 'F-8', 'F-9', 'J-1', 'J-2', 'B-10', 'B-11', 'H-4'];
 
   const getSeatPrice = (row) => {
     const section = sections.find(s => s.rows.includes(row));
@@ -102,7 +126,7 @@ const SeatBookingPage = () => {
   };
 
   if (isSuccess) {
-    const totalPaid = Math.round(getTotalPrice() * 1.13).toLocaleString();
+    const totalPaid = bookingData?.total_amount?.toLocaleString() || Math.round(getTotalPrice() * 1.13).toLocaleString();
 
     return (
       <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center p-4 md:p-8 overflow-hidden relative font-sans">
@@ -192,7 +216,7 @@ const SeatBookingPage = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Customer</p>
-                    <p className="text-sm font-bold text-gray-900">Piyush Yadav</p>
+                    <p className="text-sm font-bold text-gray-900">{customerEmail}</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -222,19 +246,11 @@ const SeatBookingPage = () => {
                     date: event.date,
                     time: event.time,
                     seats: selectedSeats.map(s => s.replace('-', '')),
-                    customer: 'Piyush Yadav'
+                    customer: customerEmail
                   })}
                   size={200}
                   level="H"
                   includeMargin={false}
-                  imageSettings={{
-                    src: "/favicon.ico",
-                    x: undefined,
-                    y: undefined,
-                    height: 40,
-                    width: 40,
-                    excavate: true,
-                  }}
                 />
               </div>
 
@@ -371,9 +387,6 @@ const SeatBookingPage = () => {
                 ))}
               </div>
             </div>
-
-            <div className="mt-16 pt-8 border-t border-gray-50 flex flex-wrap justify-center gap-8 md:hidden">
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -433,6 +446,17 @@ const SeatBookingPage = () => {
                     </div>
                   </div>
 
+                  <div className="space-y-4">
+                    <label className="text-[11px] font-black text-gray-400 uppercase tracking-wider block">Customer Email</label>
+                    <input 
+                      type="email"
+                      value={customerEmail}
+                      onChange={(e) => setCustomerEmail(e.target.value)}
+                      placeholder="Enter your email for the ticket"
+                      className="w-full bg-gray-50 border border-gray-100 rounded-2xl px-5 py-4 text-sm font-semibold outline-none focus:border-[#4AB4FF] transition-all"
+                    />
+                  </div>
+
                   <div className="bg-gray-50/50 rounded-[24px] p-6 space-y-4 border border-gray-100">
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-gray-500 font-medium">Tickets Subtotal</span>
@@ -480,9 +504,6 @@ const SeatBookingPage = () => {
                         </>
                       )}
                     </button>
-                    <p className="text-[10px] text-center text-gray-400 px-6 leading-relaxed">
-                      By proceeding, you agree to our <span className="text-gray-900 font-bold underline underline-offset-4 cursor-pointer">Terms of Service</span> and <span className="text-gray-900 font-bold underline underline-offset-4 cursor-pointer">Refund Policy</span>.
-                    </p>
                   </div>
                 </div>
               ) : (
@@ -502,4 +523,5 @@ const SeatBookingPage = () => {
 };
 
 export default SeatBookingPage;
+
 

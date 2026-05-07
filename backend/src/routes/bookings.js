@@ -69,7 +69,29 @@ bookingsRouter.post('/', async (req, res) => {
     return res.status(409).json({ error: 'Not enough seats available' })
   }
 
-  const totalAmount = eventData.price_standard * seats.length
+  const { data: existingBookings, error: existingError } = await supabaseAdmin
+    .from('bookings')
+    .select('seats')
+    .eq('event_id', eventData.id)
+    .eq('status', 'confirmed')
+
+  if (existingError) {
+    return res.status(500).json({ error: existingError.message })
+  }
+
+  const alreadyOccupied = (existingBookings ?? []).flatMap((b) => b.seats)
+  const overlappingSeats = seats.filter((s) => alreadyOccupied.includes(s))
+
+  if (overlappingSeats.length > 0) {
+    return res.status(409).json({
+      error: `Seats ${overlappingSeats.join(', ')} are already booked`,
+    })
+  }
+
+
+  const subtotal = eventData.price_standard * seats.length
+  const totalAmount = Math.round(subtotal * 1.13)
+
 
   const { data: booking, error: bookingError } = await supabaseAdmin
     .from('bookings')
@@ -99,3 +121,36 @@ bookingsRouter.post('/', async (req, res) => {
 
   return res.status(201).json({ data: booking })
 })
+
+bookingsRouter.get('/occupied/:slug', async (req, res) => {
+  const { slug } = req.params
+
+  const { data: event, error: eventError } = await supabaseAdmin
+    .from('events')
+    .select('id')
+    .eq('slug', slug)
+    .maybeSingle()
+
+  if (eventError) {
+    return res.status(500).json({ error: eventError.message })
+  }
+
+  if (!event) {
+    return res.status(404).json({ error: 'Event not found' })
+  }
+
+  const { data: bookings, error: bookingsError } = await supabaseAdmin
+    .from('bookings')
+    .select('seats')
+    .eq('event_id', event.id)
+    .eq('status', 'confirmed')
+
+  if (bookingsError) {
+    return res.status(500).json({ error: bookingsError.message })
+  }
+
+  const allOccupiedSeats = (bookings ?? []).flatMap((b) => b.seats)
+
+  return res.json({ data: allOccupiedSeats })
+})
+
