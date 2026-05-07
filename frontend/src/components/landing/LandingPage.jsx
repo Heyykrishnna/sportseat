@@ -5,6 +5,7 @@ import Hero from './Hero'
 import StatsSection from './StatsSection'
 import TournamentShowcase from './TournamentShowcase'
 import FeaturedEventsSection from './FeaturedEventsSection'
+import AllEventsSection from './AllEventsSection'
 
 function LandingPage() {
   return (
@@ -12,6 +13,7 @@ function LandingPage() {
       <Hero />
       <FeaturedEventsSection />
       <TournamentShowcase />
+      <AllEventsSection />
       <FeatureIntro />
       <StatsSection />
       <GuideSection />
@@ -19,5 +21,6 @@ function LandingPage() {
     </main>
   )
 }
+
 
 export default LandingPage
