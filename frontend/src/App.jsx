@@ -8,7 +8,10 @@ import AdminCreateEventPage from './pages/AdminCreateEventPage'
 import AuthPage from './pages/AuthPage'
 import ProfilePage from './pages/ProfilePage'
 import PageHeader from './components/shared/PageHeader'
-import { SearchProvider } from './context/SearchContext'
+import TermsPage from './pages/TermsPage'
+
+
+
 
 function AppLayout() {
   const { pathname } = useLocation()
@@ -31,27 +34,29 @@ function AppLayout() {
   )
 }
 
+
 function App() {
   return (
-    <SearchProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<AppLayout />}>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/mytickets" element={<Mytickets />} />
-            <Route path="/events" element={<EventsListPage />} />
-            <Route path="/events/:slug" element={<EventDetailPage />} />
-            <Route path="/booking/:slug" element={<SeatBookingPage />} />
-            <Route path="/booking/:slug/confirmation/:bookingReference" element={<SeatBookingPage />} />
-            <Route path="/admin/events/new" element={<AdminCreateEventPage />} />
-            <Route path="/auth" element={<AuthPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </SearchProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/mytickets" element={<Mytickets />} />
+          <Route path="/events" element={<EventsListPage />} />
+          <Route path="/events/:slug" element={<EventDetailPage />} />
+          <Route path="/booking/:slug" element={<SeatBookingPage />} />
+          <Route path="/booking/:slug/confirmation/:bookingReference" element={<SeatBookingPage />} />
+          <Route path="/admin/events/new" element={<AdminCreateEventPage />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/terms" element={<TermsPage />} />
+        </Route>
+      </Routes>
+
+
+
+    </BrowserRouter>
   )
 }
 
 export default App
-
