@@ -3,8 +3,10 @@ import express from 'express'
 import { env } from './config/env.js'
 import { bookingsRouter } from './routes/bookings.js'
 import { eventsRouter } from './routes/events.js'
+import { authRouter } from './routes/auth.js'
 
 const app = express()
+
 
 const normalizeOrigin = (origin) => origin.replace(/\/+$/, '')
 const allowedOrigins = new Set([
@@ -40,6 +42,8 @@ app.get('/health', (_req, res) => {
 
 app.use('/api/events', eventsRouter)
 app.use('/api/bookings', bookingsRouter)
+app.use('/api/auth', authRouter)
+
 
 app.use((err, _req, res, _next) => {
   console.error(err)

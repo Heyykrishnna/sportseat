@@ -5,7 +5,9 @@ import EventDetailPage from './pages/EventDetailPage'
 import SeatBookingPage from './pages/SeatBookingPage'
 import Mytickets from './pages/Navicons/Mytickets'
 import AdminCreateEventPage from './pages/AdminCreateEventPage'
+import AuthPage from './pages/AuthPage'
 import PageHeader from './components/shared/PageHeader'
+
 
 
 function AppLayout() {
@@ -13,14 +15,22 @@ function AppLayout() {
   const isHome = pathname === '/'
   const isEventDetail = pathname.startsWith('/events/')
   const isBooking = pathname.startsWith('/booking/')
+  const isAuth = pathname === '/auth'
 
   return (
     <>
-      <PageHeader transparent={isHome || isEventDetail} showSearchIcon={isHome} hideOnScroll={isBooking} />
+      {!isAuth && (
+        <PageHeader 
+          transparent={isHome || isEventDetail} 
+          showSearchIcon={isHome} 
+          hideOnScroll={isBooking} 
+        />
+      )}
       <Outlet />
     </>
   )
 }
+
 
 function App() {
   return (
@@ -33,8 +43,10 @@ function App() {
           <Route path="/events/:slug" element={<EventDetailPage />} />
           <Route path="/booking/:slug" element={<SeatBookingPage />} />
           <Route path="/admin/events/new" element={<AdminCreateEventPage />} />
+          <Route path="/auth" element={<AuthPage />} />
         </Route>
       </Routes>
+
 
     </BrowserRouter>
   )

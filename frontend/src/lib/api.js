@@ -63,4 +63,23 @@ export async function getOccupiedSeats(slug) {
   return payload.data ?? []
 }
 
+export async function login(email, password) {
+  const payload = await request('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  })
+  return payload
+}
+
+export async function signup(email, password, displayName) {
+  const payload = await request('/api/auth/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password, displayName }),
+  })
+  return payload
+}
+
+
 
