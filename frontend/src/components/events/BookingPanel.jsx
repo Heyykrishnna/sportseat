@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function BookingPanel({ event }) {
   return (
     <div className="sticky top-8 overflow-hidden rounded-2xl border border-[#dfe3dc] bg-white shadow-[0_8px_40px_rgba(23,36,33,0.12)]">
@@ -41,9 +43,12 @@ function BookingPanel({ event }) {
           </div>
         </div>
 
-        <button className="mt-5 w-full rounded-xl bg-[#6fb1d2] py-3.5 text-sm font-black text-white shadow-[0_8px_24px_rgba(111,177,210,0.4)] transition hover:bg-[#5a9ec2] hover:shadow-[0_12px_32px_rgba(111,177,210,0.5)] active:scale-[0.98]">
+        <Link 
+          to={`/booking/${event.slug}`}
+          className="mt-5 block w-full text-center rounded-xl bg-[#6fb1d2] py-3.5 text-sm font-black text-white shadow-[0_8px_24px_rgba(111,177,210,0.4)] transition hover:bg-[#5a9ec2] hover:shadow-[0_12px_32px_rgba(111,177,210,0.5)] active:scale-[0.98]"
+        >
           Book Tickets →
-        </button>
+        </Link>
 
         <div className="mt-3 flex items-center gap-2 rounded-xl bg-[#86a35c]/12 px-4 py-3">
           <span className="text-sm">🎟</span>

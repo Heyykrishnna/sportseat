@@ -2,6 +2,7 @@ import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-
 import LandingPage from './components/landing/LandingPage'
 import EventsListPage from './pages/EventsListPage'
 import EventDetailPage from './pages/EventDetailPage'
+import SeatBookingPage from './pages/SeatBookingPage'
 import Mytickets from './pages/Navicons/Mytickets'
 import PageHeader from './components/shared/PageHeader'
 
@@ -9,10 +10,11 @@ function AppLayout() {
   const { pathname } = useLocation()
   const isHome = pathname === '/'
   const isEventDetail = pathname.startsWith('/events/')
+  const isBooking = pathname.startsWith('/booking/')
 
   return (
     <>
-      <PageHeader transparent={isHome || isEventDetail} showSearchIcon={isHome} />
+      <PageHeader transparent={isHome || isEventDetail} showSearchIcon={isHome} hideOnScroll={isBooking} />
       <Outlet />
     </>
   )
@@ -27,6 +29,7 @@ function App() {
           <Route path="/mytickets" element={<Mytickets />} />
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:slug" element={<EventDetailPage />} />
+          <Route path="/booking/:slug" element={<SeatBookingPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
