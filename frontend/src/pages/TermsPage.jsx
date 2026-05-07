@@ -1,11 +1,11 @@
-import PageHeader from '../components/shared/PageHeader'
+
 import CTAFooter from '../components/landing/CTAFooter'
 
 function TermsPage() {
   return (
     <div className="min-h-screen bg-[#f6f5ef] font-sans text-[#172421]">
       <div className="bg-[#172421]">
-        <PageHeader />
+   
         <div className="px-5 py-20 sm:px-8 lg:px-12">
           <h1 className="text-4xl font-black text-white">
             Terms & Conditions

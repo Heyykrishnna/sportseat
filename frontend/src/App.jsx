@@ -10,6 +10,7 @@ import AuthPage from './pages/AuthPage'
 import ProfilePage from './pages/ProfilePage'
 import PageHeader from './components/shared/PageHeader'
 import TermsPage from './pages/TermsPage'
+import AboutPage from './pages/AboutPage'
 
 function ProtectedRoute({ children }) {
   const user = localStorage.getItem('auth_user')
@@ -77,6 +78,7 @@ function App() {
             } 
           />
           <Route path="/terms" element={<TermsPage />} />
+          <Route path="/about" element={<AboutPage />} />
         </Route>
 
       </Routes>
