@@ -1,5 +1,4 @@
 import { useParams, Link } from 'react-router-dom'
-import PageHeader from '../components/shared/PageHeader'
 import EventRating from '../components/events/EventRating'
 import BookingPanel from '../components/events/BookingPanel'
 import EventGallery from '../components/events/EventGallery'
@@ -33,9 +32,7 @@ function EventDetailPage() {
         <div className="absolute inset-0 bg-linear-to-t from-[#172421] via-[#172421]/20 to-transparent" />
         
         <div className="relative z-10 h-full">
-          <PageHeader transparent />
-          
-          <div className="container mx-auto flex h-[calc(100%-80px)] items-end px-5 pb-12 sm:px-8 lg:px-12">
+          <div className="container mx-auto flex h-full items-end px-5 pb-12 pt-28 sm:px-8 lg:px-12">
             <div className="grid w-full gap-8 lg:grid-cols-[1fr_380px]">
               <div className="max-w-3xl">
                 <div className="flex flex-wrap gap-2">

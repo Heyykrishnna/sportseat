@@ -1,11 +1,8 @@
 import basketballHero from '../../assets/landing/basketball-hero.png'
-import Header from './Header'
 
 function Hero() {
   return (
     <section id="top" className="relative min-h-[640px] overflow-hidden bg-[#6fb1d2] text-white md:min-h-[760px]">
-      <Header />
-
       <img
         className="absolute inset-0 h-full w-full object-cover object-[58%_40%]"
         src={basketballHero}

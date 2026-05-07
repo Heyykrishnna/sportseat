@@ -1,22 +1,57 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import EventCard from '../components/events/EventCard'
-import PageHeader from '../components/shared/PageHeader'
 import { events } from '../data/events'
 import CTAFooter from '../components/landing/CTAFooter'
 
 const sports = ['All', 'Football', 'Basketball', 'Cricket', 'Tennis']
+const categories = ['All', ...new Set(events.map((event) => event.category))]
+
+const sortOptions = [
+  { value: 'date-asc', label: 'Date: Soonest' },
+  { value: 'date-desc', label: 'Date: Latest' },
+  { value: 'price-asc', label: 'Price: Low to High' },
+  { value: 'price-desc', label: 'Price: High to Low' },
+  { value: 'rating-desc', label: 'Rating: High to Low' },
+]
 
 function EventsListPage() {
   const [active, setActive] = useState('All')
+  const [category, setCategory] = useState('All')
+  const [search, setSearch] = useState('')
+  const [sortBy, setSortBy] = useState('date-asc')
 
-  const filtered = active === 'All' ? events : events.filter((e) => e.sport === active)
+  const filtered = useMemo(() => {
+    const normalizedSearch = search.trim().toLowerCase()
+
+    const filteredEvents = events.filter((event) => {
+      const sportMatch = active === 'All' || event.sport === active
+      const categoryMatch = category === 'All' || event.category === category
+      const searchMatch =
+        normalizedSearch.length === 0 ||
+        event.title.toLowerCase().includes(normalizedSearch) ||
+        event.venue.toLowerCase().includes(normalizedSearch) ||
+        event.tags.some((tag) => tag.toLowerCase().includes(normalizedSearch))
+
+      return sportMatch && categoryMatch && searchMatch
+    })
+
+    const parsePrice = (price) => Number(price.replace(/[^\d]/g, ''))
+    const parseDate = (date) => new Date(date).getTime()
+    const parseRating = (rating) => Number(rating)
+
+    return filteredEvents.toSorted((a, b) => {
+      if (sortBy === 'date-desc') return parseDate(b.date) - parseDate(a.date)
+      if (sortBy === 'price-asc') return parsePrice(a.price) - parsePrice(b.price)
+      if (sortBy === 'price-desc') return parsePrice(b.price) - parsePrice(a.price)
+      if (sortBy === 'rating-desc') return parseRating(b.rating) - parseRating(a.rating)
+      return parseDate(a.date) - parseDate(b.date)
+    })
+  }, [active, category, search, sortBy])
 
   return (
     <div className="min-h-screen bg-[#f6f5ef] font-sans text-[#172421]">
       <div className="bg-[#172421]">
-        <PageHeader />
-
-        <div className="px-5 pb-14 pt-28 sm:px-8 lg:px-12">
+        <div className="px-5 pb-14 pt-32 sm:px-8 lg:px-12">
           <p className="text-xs font-black uppercase tracking-widest text-[#6fb1d2]">
             Browse All Events
           </p>
@@ -28,7 +63,39 @@ function EventsListPage() {
             discipline and book your seat before they sell out.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-2">
+          <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_200px_220px]">
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search by event, venue, or tag"
+              className="w-full rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white placeholder:text-white/60 outline-none transition focus:border-[#6fb1d2]"
+            />
+            <select
+              value={category}
+              onChange={(event) => setCategory(event.target.value)}
+              className="rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white outline-none transition focus:border-[#6fb1d2]"
+            >
+              {categories.map((item) => (
+                <option key={item} value={item} className="bg-[#172421] text-white">
+                  {item === 'All' ? 'All Categories' : item}
+                </option>
+              ))}
+            </select>
+            <select
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+              className="rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white outline-none transition focus:border-[#6fb1d2]"
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value} className="bg-[#172421] text-white">
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="mt-5 flex flex-wrap gap-2">
             {sports.map((sport) => (
               <button
                 key={sport}

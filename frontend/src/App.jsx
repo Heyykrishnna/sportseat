@@ -1,19 +1,33 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import LandingPage from './components/landing/LandingPage'
 import EventsListPage from './pages/EventsListPage'
 import EventDetailPage from './pages/EventDetailPage'
 import Mytickets from './pages/Navicons/Mytickets'
+import PageHeader from './components/shared/PageHeader'
+
+function AppLayout() {
+  const { pathname } = useLocation()
+  const isHome = pathname === '/'
+  const isEventDetail = pathname.startsWith('/events/')
+
+  return (
+    <>
+      <PageHeader transparent={isHome || isEventDetail} showSearchIcon={isHome} />
+      <Outlet />
+    </>
+  )
+}
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-                <Route path="/mytickets" element={<Mytickets />} />
-
-
-        <Route path="/events" element={<EventsListPage />} />
-        <Route path="/events/:slug" element={<EventDetailPage />} />
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/mytickets" element={<Mytickets />} />
+          <Route path="/events" element={<EventsListPage />} />
+          <Route path="/events/:slug" element={<EventDetailPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )
