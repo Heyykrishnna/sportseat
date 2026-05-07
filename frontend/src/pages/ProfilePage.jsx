@@ -41,7 +41,10 @@ function ProfilePage() {
       navigate('/auth')
       return
     }
-    loadTickets(user.email)
+    const timer = setTimeout(() => {
+      void loadTickets(user.email)
+    }, 0)
+    return () => clearTimeout(timer)
   }, [navigate, user, loadTickets])
 
   const handleSignOut = () => {

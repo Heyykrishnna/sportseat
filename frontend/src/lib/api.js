@@ -67,8 +67,55 @@ function normalizeSeatForGrid(seatId) {
 }
 
 export async function getOccupiedSeats(slug) {
-  const payload = await request(`/api/bookings/occupied/${slug}`)
-  return (payload.data ?? []).map(normalizeSeatForGrid)
+  try {
+    const payload = await request(`/api/bookings/occupied/${slug}`)
+    return (payload.data ?? []).map(normalizeSeatForGrid)
+  } catch (apiError) {
+    try {
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        throw apiError
+      }
+
+      const eventResp = await fetch(`${SUPABASE_URL}/rest/v1/events?slug=eq.${slug}&select=id`, {
+        headers: {
+          apikey: SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+        },
+      })
+
+      if (!eventResp.ok) {
+        throw new Error('Could not load event for occupied seats', { cause: apiError })
+      }
+
+      const events = await eventResp.json()
+      if (!events?.length) {
+        return []
+      }
+
+      const eventId = events[0].id
+      const bookingResp = await fetch(
+        `${SUPABASE_URL}/rest/v1/bookings?event_id=eq.${eventId}&status=eq.confirmed&select=seats`,
+        {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+        },
+      )
+
+      if (!bookingResp.ok) {
+        throw new Error('Could not load occupied seats', { cause: apiError })
+      }
+
+      const bookings = await bookingResp.json()
+      return (bookings ?? [])
+        .flatMap((booking) => booking.seats ?? [])
+        .map(normalizeSeatForGrid)
+    } catch (fallbackError) {
+      console.error('Error fetching occupied seats:', fallbackError)
+      return []
+    }
+  }
 }
 
 export async function getBookingByReference(bookingReference) {
