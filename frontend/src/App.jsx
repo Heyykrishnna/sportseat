@@ -44,6 +44,7 @@ function App() {
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:slug" element={<EventDetailPage />} />
           <Route path="/booking/:slug" element={<SeatBookingPage />} />
+          <Route path="/booking/:slug/confirmation/:bookingReference" element={<SeatBookingPage />} />
           <Route path="/admin/events/new" element={<AdminCreateEventPage />} />
           <Route path="/auth" element={<AuthPage />} />
           <Route path="/profile" element={<ProfilePage />} />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { getMyTickets } from '../lib/api'
 import { 
@@ -17,24 +17,14 @@ import {
 function ProfilePage() {
   const navigate = useNavigate()
   const [activeSection, setActiveSection] = useState('account')
-  const [user, setUser] = useState(null)
+  const [user] = useState(() => {
+    const savedUser = localStorage.getItem('auth_user')
+    return savedUser ? JSON.parse(savedUser) : null
+  })
   const [tickets, setTickets] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem('auth_user')
-    if (!savedUser) {
-      navigate('/auth')
-      return
-    }
-    const userData = JSON.parse(savedUser)
-    setUser(userData)
-
-    // Load tickets if account or tickets section is active
-    loadTickets(userData.email)
-  }, [navigate])
-
-  async function loadTickets(email) {
+  const loadTickets = useCallback(async (email) => {
     setIsLoading(true)
     try {
       const data = await getMyTickets(email)
@@ -44,7 +34,15 @@ function ProfilePage() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/auth')
+      return
+    }
+    loadTickets(user.email)
+  }, [navigate, user, loadTickets])
 
   const handleSignOut = () => {
     localStorage.removeItem('auth_user')
@@ -216,7 +214,7 @@ function ProfilePage() {
                           </div>
                           
                           <Link 
-                            to={`/events/${ticket.events?.slug}`}
+                            to={`/booking/${ticket.events?.slug}/confirmation/${ticket.booking_reference}`}
                             className="absolute inset-0 z-0"
                           />
                         </div>

@@ -58,32 +58,22 @@ export async function createBooking(bookingData) {
   return payload.data
 }
 
-export async function getOccupiedSeats(slug) {
-  try {
-    const eventResp = await fetch(`${SUPABASE_URL}/rest/v1/events?slug=eq.${slug}&select=id`, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      }
-    })
-    const events = await eventResp.json()
-    if (!events.length) return []
-    
-    const eventId = events[0].id
+function normalizeSeatForGrid(seatId) {
+  if (!seatId || typeof seatId !== 'string') return seatId
+  const value = seatId.toUpperCase().trim()
+  const match = value.match(/^([A-Z]+)-?(\d+)$/)
+  if (!match) return value
+  return `${match[1]}-${match[2]}`
+}
 
-    const bookingResp = await fetch(`${SUPABASE_URL}/rest/v1/bookings?event_id=eq.${eventId}&status=eq.confirmed&select=seats`, {
-      headers: {
-        'apikey': SUPABASE_ANON_KEY,
-        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-      }
-    })
-    const bookings = await bookingResp.json()
-    
-    return (bookings ?? []).flatMap(b => b.seats)
-  } catch (err) {
-    console.error('Error fetching occupied seats:', err)
-    return []
-  }
+export async function getOccupiedSeats(slug) {
+  const payload = await request(`/api/bookings/occupied/${slug}`)
+  return (payload.data ?? []).map(normalizeSeatForGrid)
+}
+
+export async function getBookingByReference(bookingReference) {
+  const payload = await request(`/api/bookings/${bookingReference}`)
+  return payload.data ?? null
 }
 
 

@@ -1,22 +1,25 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, Info, Calendar, MapPin, Download, Home, Share2, Ticket, User, CreditCard } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
-import { getEventBySlug, getOccupiedSeats, createBooking } from '../lib/api';
+import { getEventBySlug, getOccupiedSeats, createBooking, getBookingByReference } from '../lib/api';
 
 const SeatBookingPage = () => {
-  const { slug } = useParams();
+  const { slug, bookingReference } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isConfirmationPage = Boolean(bookingReference);
   const [event, setEvent] = useState(null);
   const [occupiedSeats, setOccupiedSeats] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [orderId, setOrderId] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
-  const [bookingData, setBookingData] = useState(null);
+  const [bookingData, setBookingData] = useState(location.state?.booking ?? null);
+  const [isLoadingBooking, setIsLoadingBooking] = useState(isConfirmationPage && !location.state?.booking);
+  const [bookingError, setBookingError] = useState('');
   
   useEffect(() => {
+    if (isConfirmationPage) return;
     let mounted = true;
 
     async function loadData() {
@@ -43,9 +46,37 @@ const SeatBookingPage = () => {
     return () => {
       mounted = false;
     };
-  }, [slug]);
+  }, [slug, isConfirmationPage]);
 
-  if (!event) {
+  useEffect(() => {
+    if (!isConfirmationPage) return;
+    if (bookingData?.booking_reference === bookingReference) return;
+
+    let mounted = true;
+    async function loadBooking() {
+      setIsLoadingBooking(true);
+      setBookingError('');
+      try {
+        const data = await getBookingByReference(bookingReference);
+        if (!mounted) return;
+        setBookingData(data);
+      } catch (err) {
+        if (!mounted) return;
+        setBookingError(err.message || 'Could not load booking confirmation');
+      } finally {
+        if (mounted) {
+          setIsLoadingBooking(false);
+        }
+      }
+    }
+
+    loadBooking();
+    return () => {
+      mounted = false;
+    };
+  }, [isConfirmationPage, bookingReference, bookingData]);
+
+  if (!isConfirmationPage && !event) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#F8F9FD]">
         <div className="text-center">
@@ -70,10 +101,21 @@ const SeatBookingPage = () => {
         seats: selectedSeats.map(id => formatSeatId(id))
       });
 
-      
-      setBookingData(result);
-      setOrderId(result.booking_reference);
-      setIsSuccess(true);
+      navigate(`/booking/${slug}/confirmation/${result.booking_reference}`, {
+        state: {
+          booking: {
+            ...result,
+            customer_email: customerEmail,
+            events: {
+              slug,
+              title: event.title,
+              venue: event.venue,
+              event_date: event.date,
+              start_time: event.time,
+            },
+          },
+        },
+      });
     } catch (err) {
       alert(err.message || 'Booking failed. Please try again.');
     } finally {
@@ -126,8 +168,65 @@ const SeatBookingPage = () => {
     );
   };
 
-  if (isSuccess) {
-    const totalPaid = bookingData?.total_amount?.toLocaleString() || Math.round(getTotalPrice() * 1.13).toLocaleString();
+  const confirmationEvent = bookingData?.events || {};
+  const confirmationSeats = bookingData?.seats || [];
+  const confirmationOrderId = bookingData?.booking_reference || bookingReference;
+  const confirmationEmail = bookingData?.customer_email || customerEmail;
+  const formatDisplayDate = (value) => {
+    if (!value) return '';
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) return value;
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }).format(parsed);
+  };
+  const formatDisplayTime = (value) => {
+    if (!value) return '';
+    if (value.includes('AM') || value.includes('PM')) return value;
+    const now = new Date().toISOString().slice(0, 10);
+    const parsed = new Date(`${now}T${value}`);
+    if (Number.isNaN(parsed.getTime())) return value;
+    return new Intl.DateTimeFormat('en-IN', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }).format(parsed);
+  };
+
+  if (isConfirmationPage) {
+    if (isLoadingBooking) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-[#F8F9FD]">
+          <div className="text-center">
+            <div className="w-16 h-16 border-4 border-[#4AB4FF] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-500 font-bold">Loading booking confirmation...</p>
+          </div>
+        </div>
+      );
+    }
+
+    if (bookingError || !bookingData) {
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-[#F8F9FD] p-6">
+          <div className="max-w-lg text-center bg-white border border-gray-100 rounded-3xl p-8 shadow-sm">
+            <h1 className="text-2xl font-black text-gray-900 mb-2">Booking not found</h1>
+            <p className="text-sm text-gray-500 font-medium mb-6">
+              {bookingError || 'We could not find this booking confirmation.'}
+            </p>
+            <button
+              onClick={() => navigate('/profile')}
+              className="inline-flex items-center gap-2 rounded-2xl bg-[#1A1C1E] px-5 py-3 text-white text-sm font-black"
+            >
+              Go to Profile
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    const totalPaid = bookingData?.total_amount?.toLocaleString() || '0';
 
     return (
       <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center p-4 md:p-8 overflow-hidden relative font-sans">
@@ -146,11 +245,11 @@ const SeatBookingPage = () => {
                 <div className="flex justify-between items-start mb-10">
                   <div>
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Event</p>
-                    <h2 className="text-2xl font-black text-gray-900 leading-tight">{event.title}</h2>
+                    <h2 className="text-2xl font-black text-gray-900 leading-tight">{confirmationEvent.title}</h2>
                   </div>
                   <div className="text-right">
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">Order ID</p>
-                    <p className="text-sm font-black text-gray-900">{orderId}</p>
+                    <p className="text-sm font-black text-gray-900">{confirmationOrderId}</p>
                   </div>
                 </div>
 
@@ -160,15 +259,15 @@ const SeatBookingPage = () => {
                       <Calendar className="w-3.5 h-3.5" />
                       <p className="text-[10px] font-black uppercase tracking-widest">Date & Time</p>
                     </div>
-                    <p className="font-bold text-gray-900">{event.date}</p>
-                    <p className="text-sm text-gray-500 font-medium">{event.time}</p>
+                    <p className="font-bold text-gray-900">{formatDisplayDate(confirmationEvent.event_date)}</p>
+                    <p className="text-sm text-gray-500 font-medium">{formatDisplayTime(confirmationEvent.start_time)}</p>
                   </div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-gray-400">
                       <MapPin className="w-3.5 h-3.5" />
                       <p className="text-[10px] font-black uppercase tracking-widest">Venue</p>
                     </div>
-                    <p className="font-bold text-gray-900">{event.venue}</p>
+                    <p className="font-bold text-gray-900">{confirmationEvent.venue}</p>
                     <p className="text-sm text-gray-500 font-medium">Gate 4, Sector B</p>
                   </div>
                   <div className="space-y-1">
@@ -176,8 +275,8 @@ const SeatBookingPage = () => {
                       <Ticket className="w-3.5 h-3.5" />
                       <p className="text-[10px] font-black uppercase tracking-widest">Seats</p>
                     </div>
-                    <p className="font-bold text-gray-900">{selectedSeats.map(s => s.replace('-', '')).join(', ')}</p>
-                    <p className="text-sm text-gray-500 font-medium">{selectedSeats.length} Tickets</p>
+                    <p className="font-bold text-gray-900">{confirmationSeats.join(', ')}</p>
+                    <p className="text-sm text-gray-500 font-medium">{confirmationSeats.length} Tickets</p>
                   </div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 text-gray-400">
@@ -217,7 +316,7 @@ const SeatBookingPage = () => {
                   </div>
                   <div>
                     <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Customer</p>
-                    <p className="text-sm font-bold text-gray-900">{customerEmail}</p>
+                    <p className="text-sm font-bold text-gray-900">{confirmationEmail}</p>
                   </div>
                 </div>
                 <div className="flex gap-3">
@@ -241,13 +340,13 @@ const SeatBookingPage = () => {
               <div className="w-full aspect-square bg-white rounded-[32px] p-6 mb-8 relative group flex items-center justify-center">
                 <QRCodeSVG
                   value={JSON.stringify({
-                    orderId,
-                    event: event.title,
-                    venue: event.venue,
-                    date: event.date,
-                    time: event.time,
-                    seats: selectedSeats.map(s => s.replace('-', '')),
-                    customer: customerEmail
+                    orderId: confirmationOrderId,
+                    event: confirmationEvent.title,
+                    venue: confirmationEvent.venue,
+                    date: formatDisplayDate(confirmationEvent.event_date),
+                    time: formatDisplayTime(confirmationEvent.start_time),
+                    seats: confirmationSeats,
+                    customer: confirmationEmail
                   })}
                   size={200}
                   level="H"
