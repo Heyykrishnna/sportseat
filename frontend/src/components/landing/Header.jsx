@@ -1,8 +1,7 @@
+import { Link } from "react-router-dom"
 const navItems = [
-  {name: 'About', path: "/about"},
-  {name: 'Tournaments', path: "/tournaments"},
-  {name: 'Participants', path: "/participants"},
-  {name: 'Teams', path: "/teams"}, 
+  {name: 'Events', path: "/events"},
+  {name: 'My Tickets', path: "/mytickets"},
   {name: 'FAQ', path: "/faq"}
 ]
 
