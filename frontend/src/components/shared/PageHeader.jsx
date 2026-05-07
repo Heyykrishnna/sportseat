@@ -3,11 +3,11 @@ import SearchModal from './SearchModal'
 import { useSearch } from '../../context/SearchContext'
 
 const navItems = [
-  { label: 'About', href: '/#about' },
+  { label: 'About', href: '/about' },
   { label: 'Events', href: '/events' },
-  { label: 'Tournaments', href: '/#tournaments' },
-  { label: 'Participants', href: '/#participants' },
-  { label: 'FAQ', href: '/#faq' },
+  { label: 'Create Event', href: '/admin/events/new' },
+  { label: 'Terms & Conditions', href: '/terms' },
+  { label: 'FAQ', href: '/faq' },
 ]
 
 function PageHeader({ transparent = false, showSearchIcon = false }) {
