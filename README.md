@@ -3,7 +3,7 @@
 SportSeat is split into:
 
 - `frontend`: React + Vite UI
-- `backend`: Express API + Supabase integration
+- `backend`: Express 
 
 ## Backend setup (Supabase + API)
 
@@ -17,25 +17,6 @@ npm install
 npm run dev
 ```
 
-### Supabase CLI flow
-
-From `backend`:
-
-```bash
-supabase start
-supabase db push
-supabase db seed
-```
-
-For remote push:
-
-```bash
-supabase login
-supabase link --project-ref <your-project-ref>
-supabase db push
-supabase db seed
-```
-
 ## Frontend setup
 
 1. Go to `frontend`.
@@ -44,6 +25,18 @@ supabase db seed
 
 ```bash
 cd frontend
+npm install
+npm run dev
+```
+
+## Backend setup
+
+1. Go to `backend`.
+2. Copy `.env.example` to `.env`.
+3. Run the app.
+
+```bash
+cd backend
 npm install
 npm run dev
 ```
