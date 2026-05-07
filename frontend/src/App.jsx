@@ -1,4 +1,4 @@
-import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import { SearchProvider } from './context/SearchContext'
 import LandingPage from './components/landing/LandingPage'
 import EventsListPage from './pages/EventsListPage'
@@ -11,9 +11,13 @@ import ProfilePage from './pages/ProfilePage'
 import PageHeader from './components/shared/PageHeader'
 import TermsPage from './pages/TermsPage'
 
-
-
-
+function ProtectedRoute({ children }) {
+  const user = localStorage.getItem('auth_user')
+  if (!user) {
+    return <Navigate to="/auth" replace />
+  }
+  return children
+}
 
 function AppLayout() {
   const { pathname } = useLocation()
@@ -37,29 +41,48 @@ function AppLayout() {
   )
 }
 
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<AppLayout />}>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/mytickets" element={<Mytickets />} />
+          <Route 
+            path="/mytickets" 
+            element={
+              <ProtectedRoute>
+                <Mytickets />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:slug" element={<EventDetailPage />} />
           <Route path="/booking/:slug" element={<SeatBookingPage />} />
           <Route path="/booking/:slug/confirmation/:bookingReference" element={<SeatBookingPage />} />
-          <Route path="/admin/events/new" element={<AdminCreateEventPage />} />
+          <Route 
+            path="/admin/events/new" 
+            element={
+              <ProtectedRoute>
+                <AdminCreateEventPage />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/auth" element={<AuthPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route 
+            path="/profile" 
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            } 
+          />
           <Route path="/terms" element={<TermsPage />} />
         </Route>
+
       </Routes>
-
-
-
     </BrowserRouter>
   )
 }
 
 export default App
+
