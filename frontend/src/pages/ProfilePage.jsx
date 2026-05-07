@@ -63,7 +63,6 @@ function ProfilePage() {
       <div className="container mx-auto px-5 sm:px-8 lg:px-12">
         <div className="flex flex-col gap-8 lg:flex-row">
           
-          {/* Left Sidebar Navigation */}
           <aside className="w-full lg:w-80">
             <div className="rounded-3xl border border-[#dfe3dc] bg-white p-6 shadow-[0_8px_30px_rgba(23,36,33,0.05)]">
               <div className="flex flex-col items-center text-center">
@@ -116,7 +115,6 @@ function ProfilePage() {
             </div>
           </aside>
 
-          {/* Right Content Area */}
           <div className="flex-1">
             <div className="min-h-[500px] rounded-3xl border border-[#dfe3dc] bg-white p-8 shadow-[0_8px_30px_rgba(23,36,33,0.05)] sm:p-10">
               
