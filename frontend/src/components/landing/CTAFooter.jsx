@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 const footerLinks = ['About', 'Events', 'Pricing', 'Support']
 
 function CTAFooter() {
@@ -31,6 +32,18 @@ function CTAFooter() {
           SPORTSEAT
         </p>
       </div>
+      <div className="relative z-10 mx-auto mt-12 max-w-7xl border-t border-[#dfe3dc] pt-8 text-center">
+  <p className="text-xs font-semibold text-[#68736f] mb-3">
+    © 2026 SportSeat. All rights reserved.
+  </p>
+  <Link 
+    to="/terms" 
+    className="text-sm font-bold text-[#6fb1d2] hover:underline transition"
+  >
+    Terms & Conditions
+  </Link>
+</div>
+
     </footer>
   )
 }

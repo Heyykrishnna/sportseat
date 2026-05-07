@@ -110,6 +110,15 @@ function EventsListPage() {
               </button>
             ))}
           </div>
+          <div className="mt-6 w-full">
+  <input
+    type="text"
+    placeholder="🔍 Search events by name, sport, or venue..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    className="w-full px-4 py-3 rounded-lg border border-white/30 bg-white/10 text-white placeholder-white/60 text-sm font-semibold focus:outline-none focus:border-[#6fb1d2] transition"
+  />
+</div>
         </div>
       </div>
 
