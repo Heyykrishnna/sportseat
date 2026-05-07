@@ -18,7 +18,7 @@ function CTAFooter() {
           {footerLinks.map((link) => (
             <a 
               key={link} 
-              className="rounded-full border border-[#dfe3dc] bg-white px-7 py-3 text-sm font-black text-[#172421] transition-all duration-300 hover:border-[#172421] hover:bg-[#172421] hover:text-white hover:-translate-y-1 hover:shadow-lg" 
+              className="rounded-full border border-[#dfe3dc] bg-white px-7 py-3 text-sm font-black text-[#172421] transition-all duration-300 hover:border-[#172421] hover:text-white hover:-translate-y-1 hover:shadow-lg" 
               href="#top"
             >
               {link}

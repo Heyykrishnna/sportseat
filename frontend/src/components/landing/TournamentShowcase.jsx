@@ -55,7 +55,7 @@ function TournamentShowcase() {
               {trendingEvent.description.substring(0, 150)}...
             </p>
             <Link
-              className="mt-5 inline-flex rounded-full border border-[#172421] px-5 py-3 text-sm font-black text-[#253733] transition hover:bg-[#172421] hover:text-white"
+              className="mt-5 inline-flex rounded-full border border-[#172421] px-5 py-3 text-sm font-black text-[#253733] transition hover:text-white"
               to={`/events/${trendingEvent.slug}`}
             >
               View Tournament Details
@@ -118,7 +118,7 @@ function TournamentShowcase() {
                   <p className="mt-1 text-xs font-bold text-white/72">{event.seats}</p>
                 </div>
                 <div className="text-right">
-                  <p className="rounded-full bg-[#172421] px-5 py-2.5 text-sm font-black text-white shadow-[0_10px_24px_rgba(49,91,232,0.35)]">
+                  <p className="rounded-full bg-[#172421] px-5 py-2.5 text-sm font-black text-white">
                     {event.price}
                   </p>
                 </div>
