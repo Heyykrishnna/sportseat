@@ -119,8 +119,64 @@ export async function getOccupiedSeats(slug) {
 }
 
 export async function getBookingByReference(bookingReference) {
-  const payload = await request(`/api/bookings/${bookingReference}`)
-  return payload.data ?? null
+  try {
+    const payload = await request(`/api/bookings/${bookingReference}`)
+    return payload.data ?? null
+  } catch (apiError) {
+    try {
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        throw apiError
+      }
+
+      const bookingResp = await fetch(
+        `${SUPABASE_URL}/rest/v1/bookings?booking_reference=eq.${encodeURIComponent(bookingReference)}&select=booking_reference,status,total_amount,seats,created_at,customer_email,event_id`,
+        {
+          headers: {
+            apikey: SUPABASE_ANON_KEY,
+            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+        },
+      )
+
+      if (!bookingResp.ok) {
+        throw new Error('Could not load booking details', { cause: apiError })
+      }
+
+      const bookingRows = await bookingResp.json()
+      const booking = bookingRows?.[0]
+
+      if (!booking) {
+        return null
+      }
+
+      let event = null
+      if (booking.event_id) {
+        const eventResp = await fetch(
+          `${SUPABASE_URL}/rest/v1/events?id=eq.${booking.event_id}&select=slug,title,event_date,start_time,venue`,
+          {
+            headers: {
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            },
+          },
+        )
+
+        if (eventResp.ok) {
+          const eventRows = await eventResp.json()
+          event = eventRows?.[0] ?? null
+        }
+      }
+
+      return {
+        ...booking,
+        seats: (booking.seats ?? []).map((seat) => String(seat).toUpperCase()),
+        events: event,
+      }
+    } catch (fallbackError) {
+      console.error('Error fetching booking confirmation:', fallbackError)
+      throw apiError
+    }
+  }
 }
 
 

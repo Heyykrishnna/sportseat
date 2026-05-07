@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, Info, Calendar, MapPin, Download, Home, Share2, Ticket, User, CreditCard } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
-import { getEventBySlug, getOccupiedSeats, createBooking, getBookingByReference } from '../lib/api';
+import { getEventBySlug, getOccupiedSeats, createBooking, getBookingByReference, getMyTickets } from '../lib/api';
 
 const SeatBookingPage = () => {
   const { slug, bookingReference } = useParams();
@@ -57,7 +57,25 @@ const SeatBookingPage = () => {
       setIsLoadingBooking(true);
       setBookingError('');
       try {
-        const data = await getBookingByReference(bookingReference);
+        let data = await getBookingByReference(bookingReference);
+
+        if (!data) {
+          const savedUser = localStorage.getItem('auth_user');
+          const parsedUser = savedUser ? JSON.parse(savedUser) : null;
+          if (parsedUser?.email) {
+            const tickets = await getMyTickets(parsedUser.email);
+            const matchedTicket = tickets.find(
+              (ticket) => ticket.booking_reference === bookingReference,
+            );
+            if (matchedTicket) {
+              data = {
+                ...matchedTicket,
+                customer_email: parsedUser.email,
+              };
+            }
+          }
+        }
+
         if (!mounted) return;
         setBookingData(data);
       } catch (err) {

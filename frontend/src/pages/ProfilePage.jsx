@@ -216,6 +216,12 @@ function ProfilePage() {
                           
                           <Link 
                             to={`/booking/${ticket.events?.slug}/confirmation/${ticket.booking_reference}`}
+                            state={{
+                              booking: {
+                                ...ticket,
+                                customer_email: user.email,
+                              },
+                            }}
                             className="absolute inset-0 z-0"
                           />
                         </div>
