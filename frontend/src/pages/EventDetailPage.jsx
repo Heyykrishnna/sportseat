@@ -1,19 +1,63 @@
+import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import EventRating from '../components/events/EventRating'
 import BookingPanel from '../components/events/BookingPanel'
 import EventGallery from '../components/events/EventGallery'
-import { getEventBySlug } from '../data/events'
 import CTAFooter from '../components/landing/CTAFooter'
+import { getEventBySlug } from '../lib/api'
 
 function EventDetailPage() {
   const { slug } = useParams()
-  const event = getEventBySlug(slug)
+  const [event, setEvent] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    let isMounted = true
+
+    async function loadEvent() {
+      setIsLoading(true)
+      setError('')
+
+      try {
+        const data = await getEventBySlug(slug)
+        if (isMounted) {
+          setEvent(data)
+        }
+      } catch (fetchError) {
+        if (isMounted) {
+          setEvent(null)
+          setError(fetchError.message || 'Could not load event')
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false)
+        }
+      }
+    }
+
+    loadEvent()
+
+    return () => {
+      isMounted = false
+    }
+  }, [slug])
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f6f5ef] p-5 text-center">
+        <p className="text-base font-bold text-[#68736f]">Loading event...</p>
+      </div>
+    )
+  }
 
   if (!event) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-[#f6f5ef] p-5 text-center">
         <h1 className="text-4xl font-black text-[#172421]">Event Not Found</h1>
-        <p className="mt-4 text-[#68736f]">The event you are looking for does not exist or has been removed.</p>
+        <p className="mt-4 text-[#68736f]">
+          {error || 'The event you are looking for does not exist or has been removed.'}
+        </p>
         <Link to="/events" className="mt-8 rounded-full bg-[#172421] px-8 py-3 font-bold text-white transition hover:bg-[#6fb1d2]">
           Back to Events
         </Link>

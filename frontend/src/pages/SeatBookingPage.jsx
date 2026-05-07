@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Info, Calendar, MapPin, CheckCircle2, Download, Home, Share2, Ticket, User, CreditCard } from "lucide-react";
+import { ChevronLeft, Info, Calendar, MapPin, Download, Home, Share2, Ticket, User, CreditCard } from "lucide-react";
 import { QRCodeSVG } from 'qrcode.react';
-import { getEventBySlug } from '../data/events';
+import { getEventBySlug } from '../lib/api';
 
 const SeatBookingPage = () => {
   const { slug } = useParams();
@@ -11,12 +11,29 @@ const SeatBookingPage = () => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [orderId, setOrderId] = useState('');
   
   useEffect(() => {
-    const eventData = getEventBySlug(slug);
-    if (eventData) {
-      setEvent(eventData);
+    let mounted = true;
+
+    async function loadEvent() {
+      try {
+        const eventData = await getEventBySlug(slug);
+        if (mounted) {
+          setEvent(eventData);
+        }
+      } catch {
+        if (mounted) {
+          setEvent(null);
+        }
+      }
     }
+
+    loadEvent();
+
+    return () => {
+      mounted = false;
+    };
   }, [slug]);
 
   if (!event) {
@@ -34,6 +51,7 @@ const SeatBookingPage = () => {
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);
+      setOrderId(`SPT-${crypto.randomUUID().slice(0, 9).toUpperCase()}`);
       setIsSuccess(true);
     }, 2000);
   };
@@ -85,7 +103,6 @@ const SeatBookingPage = () => {
 
   if (isSuccess) {
     const totalPaid = Math.round(getTotalPrice() * 1.13).toLocaleString();
-    const orderId = `SPT-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
 
     return (
       <div className="min-h-screen bg-[#F8F9FD] flex items-center justify-center p-4 md:p-8 overflow-hidden relative font-sans">

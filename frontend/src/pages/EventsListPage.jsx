@@ -1,10 +1,9 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import EventCard from '../components/events/EventCard'
-import { events } from '../data/events'
 import CTAFooter from '../components/landing/CTAFooter'
+import { getEvents } from '../lib/api'
 
 const sports = ['All', 'Football', 'Basketball', 'Cricket', 'Tennis']
-const categories = ['All', ...new Set(events.map((event) => event.category))]
 
 const sortOptions = [
   { value: 'date-asc', label: 'Date: Soonest' },
@@ -19,34 +18,50 @@ function EventsListPage() {
   const [category, setCategory] = useState('All')
   const [search, setSearch] = useState('')
   const [sortBy, setSortBy] = useState('date-asc')
+  const [events, setEvents] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState('')
 
-  const filtered = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase()
+  useEffect(() => {
+    const controller = new AbortController()
 
-    const filteredEvents = events.filter((event) => {
-      const sportMatch = active === 'All' || event.sport === active
-      const categoryMatch = category === 'All' || event.category === category
-      const searchMatch =
-        normalizedSearch.length === 0 ||
-        event.title.toLowerCase().includes(normalizedSearch) ||
-        event.venue.toLowerCase().includes(normalizedSearch) ||
-        event.tags.some((tag) => tag.toLowerCase().includes(normalizedSearch))
+    async function loadEvents() {
+      setIsLoading(true)
+      setError('')
 
-      return sportMatch && categoryMatch && searchMatch
-    })
+      try {
+        const data = await getEvents({
+          q: search,
+          sport: active,
+          category,
+          sort: sortBy,
+        })
 
-    const parsePrice = (price) => Number(price.replace(/[^\d]/g, ''))
-    const parseDate = (date) => new Date(date).getTime()
-    const parseRating = (rating) => Number(rating)
+        if (!controller.signal.aborted) {
+          setEvents(data)
+        }
+      } catch (fetchError) {
+        if (!controller.signal.aborted) {
+          setEvents([])
+          setError(fetchError.message || 'Could not load events')
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false)
+        }
+      }
+    }
 
-    return filteredEvents.toSorted((a, b) => {
-      if (sortBy === 'date-desc') return parseDate(b.date) - parseDate(a.date)
-      if (sortBy === 'price-asc') return parsePrice(a.price) - parsePrice(b.price)
-      if (sortBy === 'price-desc') return parsePrice(b.price) - parsePrice(a.price)
-      if (sortBy === 'rating-desc') return parseRating(b.rating) - parseRating(a.rating)
-      return parseDate(a.date) - parseDate(b.date)
-    })
+    loadEvents()
+
+    return () => {
+      controller.abort()
+    }
   }, [active, category, search, sortBy])
+
+  const categories = useMemo(() => {
+    return ['All', ...new Set(events.map((event) => event.category))]
+  }, [events])
 
   return (
     <div className="min-h-screen bg-[#f6f5ef] font-sans text-[#172421]">
@@ -110,27 +125,30 @@ function EventsListPage() {
               </button>
             ))}
           </div>
-          <div className="mt-6 w-full">
-  <input
-    type="text"
-    placeholder="🔍 Search events by name, sport, or venue..."
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="w-full px-4 py-3 rounded-lg border border-white/30 bg-white/10 text-white placeholder-white/60 text-sm font-semibold focus:outline-none focus:border-[#6fb1d2] transition"
-  />
-</div>
         </div>
       </div>
 
       <main className="px-5 py-12 sm:px-8 lg:px-12">
         <div className="flex items-center justify-between">
           <p className="text-sm font-bold text-[#68736f]">
-            {filtered.length} event{filtered.length !== 1 ? 's' : ''} found
+            {events.length} event{events.length !== 1 ? 's' : ''} found
           </p>
         </div>
 
+        {isLoading && (
+          <p className="mt-6 text-sm font-semibold text-[#68736f]">Loading events...</p>
+        )}
+
+        {error && !isLoading && (
+          <p className="mt-6 text-sm font-semibold text-red-600">{error}</p>
+        )}
+
+        {!isLoading && !error && events.length === 0 && (
+          <p className="mt-6 text-sm font-semibold text-[#68736f]">No events matched your filters.</p>
+        )}
+
         <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filtered.map((event) => (
+          {events.map((event) => (
             <EventCard key={event.slug} event={event} />
           ))}
         </div>
