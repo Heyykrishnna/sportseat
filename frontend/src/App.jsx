@@ -6,7 +6,9 @@ import SeatBookingPage from './pages/SeatBookingPage'
 import Mytickets from './pages/Navicons/Mytickets'
 import AdminCreateEventPage from './pages/AdminCreateEventPage'
 import AuthPage from './pages/AuthPage'
+import ProfilePage from './pages/ProfilePage'
 import PageHeader from './components/shared/PageHeader'
+
 
 
 
@@ -44,8 +46,10 @@ function App() {
           <Route path="/booking/:slug" element={<SeatBookingPage />} />
           <Route path="/admin/events/new" element={<AdminCreateEventPage />} />
           <Route path="/auth" element={<AuthPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Routes>
+
 
 
     </BrowserRouter>

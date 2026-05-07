@@ -48,8 +48,26 @@ function PageHeader({ transparent = false, showSearchIcon = false }) {
         >
           Browse Events
         </Link>
+        
+        {localStorage.getItem('auth_user') ? (
+          <Link to="/profile" className="relative h-9 w-9 overflow-hidden rounded-full border border-white/30 transition hover:border-white/60">
+            <img 
+              src="https://i.pinimg.com/736x/f4/fe/5a/f4fe5ad553f1f29d88a33451cd75c334.jpg" 
+              alt="Profile" 
+              className="h-full w-full object-cover"
+            />
+          </Link>
+        ) : (
+          <Link
+            className="rounded-full bg-[#6fb1d2] px-5 py-2 text-xs font-bold text-white transition hover:bg-[#5a9ec2]"
+            to="/auth"
+          >
+            Sign In
+          </Link>
+        )}
       </div>
     </header>
+
   )
 }
 
