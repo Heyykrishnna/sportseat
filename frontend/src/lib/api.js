@@ -35,3 +35,15 @@ export async function getMyTickets(email) {
   const payload = await request(`/api/bookings/my-tickets?email=${encodeURIComponent(email)}`)
   return payload.data ?? []
 }
+
+export async function createEvent(eventData) {
+  const payload = await request('/api/events', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(eventData),
+  })
+  return payload.data
+}
+

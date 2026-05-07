@@ -4,7 +4,9 @@ import EventsListPage from './pages/EventsListPage'
 import EventDetailPage from './pages/EventDetailPage'
 import SeatBookingPage from './pages/SeatBookingPage'
 import Mytickets from './pages/Navicons/Mytickets'
+import AdminCreateEventPage from './pages/AdminCreateEventPage'
 import PageHeader from './components/shared/PageHeader'
+
 
 function AppLayout() {
   const { pathname } = useLocation()
@@ -30,8 +32,10 @@ function App() {
           <Route path="/events" element={<EventsListPage />} />
           <Route path="/events/:slug" element={<EventDetailPage />} />
           <Route path="/booking/:slug" element={<SeatBookingPage />} />
+          <Route path="/admin/events/new" element={<AdminCreateEventPage />} />
         </Route>
       </Routes>
+
     </BrowserRouter>
   )
 }

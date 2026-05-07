@@ -99,3 +99,76 @@ eventsRouter.get('/:slug', async (req, res) => {
 
   return res.json({ data: mapEventDetailRow(data) })
 })
+
+const createEventSchema = z.object({
+  title: z.string().min(1),
+  subtitle: z.string().optional(),
+  slug: z.string().min(1),
+  sport: z.string().min(1),
+  category: z.string().min(1),
+  venue: z.string().min(1),
+  event_date: z.string(),
+  start_time: z.string(),
+  duration_minutes: z.number().int().positive(),
+  description: z.string().optional(),
+  price_standard: z.number().nonnegative(),
+  price_premium: z.number().nonnegative(),
+  seats_left: z.number().int().nonnegative(),
+  cover_image_url: z.string().url().optional(),
+  hero_image_url: z.string().url().optional(),
+  age_rating: z.string().optional(),
+  rating: z.number().min(0).max(5).default(0),
+  votes_count: z.number().int().nonnegative().default(0),
+  highlights: z.array(z.string()).optional(),
+  tags: z.array(z.string()).optional(),
+  gallery: z.array(z.string()).optional(),
+})
+
+eventsRouter.post('/', async (req, res) => {
+  const parsed = createEventSchema.safeParse(req.body)
+
+  if (!parsed.success) {
+    return res.status(400).json({
+      error: 'Invalid request body',
+      issues: parsed.error.issues,
+    })
+  }
+
+  const { tags, gallery, ...eventData } = parsed.data
+
+  const { data: event, error: eventError } = await supabaseAdmin
+    .from('events')
+    .insert([eventData])
+    .select()
+    .single()
+
+  if (eventError) {
+    return res.status(500).json({ error: eventError.message })
+  }
+
+  if (tags && tags.length > 0) {
+    const tagRows = tags.map((tag) => ({ event_id: event.id, tag }))
+    const { error: tagsError } = await supabaseAdmin.from('event_tags').insert(tagRows)
+    if (tagsError) {
+      console.error('Error inserting tags:', tagsError)
+    }
+  }
+
+  if (gallery && gallery.length > 0) {
+    const galleryRows = gallery.map((url, index) => ({
+      event_id: event.id,
+      image_url: url,
+      sort_order: index,
+    }))
+    const { error: galleryError } = await supabaseAdmin.from('event_gallery').insert(galleryRows)
+    if (galleryError) {
+      console.error('Error inserting gallery:', galleryError)
+    }
+  }
+
+  return res.status(201).json({
+    message: 'Event created successfully',
+    data: event,
+  })
+})
+

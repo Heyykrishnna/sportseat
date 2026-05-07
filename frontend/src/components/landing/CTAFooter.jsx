@@ -36,13 +36,22 @@ function CTAFooter() {
   <p className="text-xs font-semibold text-[#68736f] mb-3">
     © 2026 SportSeat. All rights reserved.
   </p>
-  <Link 
-    to="/terms" 
-    className="text-sm font-bold text-[#6fb1d2] hover:underline transition"
-  >
-    Terms & Conditions
-  </Link>
+  <div className="flex justify-center gap-6">
+    <Link 
+      to="/terms" 
+      className="text-sm font-bold text-[#6fb1d2] hover:underline transition"
+    >
+      Terms & Conditions
+    </Link>
+    <Link 
+      to="/admin/events/new" 
+      className="text-sm font-bold text-[#6fb1d2] hover:underline transition"
+    >
+      Admin Dashboard
+    </Link>
+  </div>
 </div>
+
 
     </footer>
   )
