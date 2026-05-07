@@ -63,23 +63,52 @@ export async function getOccupiedSeats(slug) {
   return payload.data ?? []
 }
 
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
 export async function login(email, password) {
-  const payload = await request('/api/auth/login', {
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+    },
     body: JSON.stringify({ email, password }),
   })
-  return payload
+  
+  const payload = await response.json()
+  if (!response.ok) throw new Error(payload.error_description || payload.error || 'Login failed')
+  
+  return {
+    session: {
+      access_token: payload.access_token,
+      refresh_token: payload.refresh_token,
+      expires_at: payload.expires_at,
+    },
+    user: payload.user,
+  }
 }
 
 export async function signup(email, password, displayName) {
-  const payload = await request('/api/auth/signup', {
+  const response = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password, displayName }),
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({
+      email,
+      password,
+      data: { display_name: displayName },
+    }),
   })
+
+  const payload = await response.json()
+  if (!response.ok) throw new Error(payload.msg || payload.error || 'Signup failed')
+  
   return payload
 }
+
 
 
 
