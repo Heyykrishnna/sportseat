@@ -9,7 +9,6 @@ function LandingPage() {
   return (
     <main className="min-h-screen w-full overflow-x-hidden bg-[#f6f5ef] font-sans text-[#172421]">
       <Hero />
-      <FeaturedEventsSection /> 
       <TournamentShowcase />
       <FeatureIntro />
       <StatsSection />
