@@ -11,7 +11,7 @@ function FeaturedEventsSection() {
     <section className="px-5 py-20 sm:px-8 lg:px-12 bg-gradient-to-r from-[#6fb1d2] to-[#172421]">
       <div className="text-center mb-12">
         <p className="text-xs font-black uppercase tracking-widest text-white">
-          ⭐ Featured
+          Featured
         </p>
         <h2 className="mt-2 text-4xl font-black text-white">
           Top Rated Events
