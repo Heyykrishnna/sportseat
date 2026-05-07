@@ -1,6 +1,9 @@
 import basketballHero from '../../assets/landing/basketball-hero.png'
+import { useSearch } from '../../context/SearchContext'
 
 function Hero() {
+  const { openSearch } = useSearch()
+
   return (
     <section id="top" className="relative min-h-[640px] overflow-hidden bg-[#6fb1d2] text-white md:min-h-[760px]">
       <img
@@ -17,6 +20,16 @@ function Hero() {
               Organize and Join The Tournaments
             </h1>
             <div className="mt-8 flex flex-wrap items-center gap-3">
+              <button
+                onClick={openSearch}
+                className="inline-flex items-center gap-2 rounded-full bg-[#172421] px-6 py-3 text-sm font-black text-white transition hover:bg-[#6fb1d2]"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current stroke-2">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20l-3.5-3.5" />
+                </svg>
+                Search Events
+              </button>
               <a
                 className="rounded-full border font-light border-[#172421] px-6 py-3 text-sm text-[#172421] transition"
                 href="#tournaments"
@@ -38,3 +51,4 @@ function Hero() {
 }
 
 export default Hero
+
