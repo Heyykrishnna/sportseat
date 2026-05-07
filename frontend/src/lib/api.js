@@ -59,9 +59,33 @@ export async function createBooking(bookingData) {
 }
 
 export async function getOccupiedSeats(slug) {
-  const payload = await request(`/api/bookings/occupied/${slug}`)
-  return payload.data ?? []
+  try {
+    const eventResp = await fetch(`${SUPABASE_URL}/rest/v1/events?slug=eq.${slug}&select=id`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    })
+    const events = await eventResp.json()
+    if (!events.length) return []
+    
+    const eventId = events[0].id
+
+    const bookingResp = await fetch(`${SUPABASE_URL}/rest/v1/bookings?event_id=eq.${eventId}&status=eq.confirmed&select=seats`, {
+      headers: {
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
+      }
+    })
+    const bookings = await bookingResp.json()
+    
+    return (bookings ?? []).flatMap(b => b.seats)
+  } catch (err) {
+    console.error('Error fetching occupied seats:', err)
+    return []
+  }
 }
+
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY

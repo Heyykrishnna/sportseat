@@ -40,6 +40,11 @@ app.get('/health', (_req, res) => {
   res.json({ ok: true })
 })
 
+app.get('/', (_req, res) => {
+  res.json({ message: 'SportSeat API is running' })
+})
+
+
 app.use('/api/events', eventsRouter)
 app.use('/api/bookings', bookingsRouter)
 app.use('/api/auth', authRouter)

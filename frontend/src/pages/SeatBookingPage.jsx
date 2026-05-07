@@ -67,8 +67,9 @@ const SeatBookingPage = () => {
       const result = await createBooking({
         customerEmail,
         eventSlug: slug,
-        seats: selectedSeats
+        seats: selectedSeats.map(id => formatSeatId(id))
       });
+
       
       setBookingData(result);
       setOrderId(result.booking_reference);
