@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Outlet, Route, Routes, useLocation, Navigate } from 'react-router-dom'
 import { SearchProvider } from './context/SearchContext'
 import LandingPage from './components/landing/LandingPage'
@@ -28,6 +29,10 @@ function AppLayout() {
   const isEventDetail = pathname.startsWith('/events/')
   const isBooking = pathname.startsWith('/booking/')
   const isAuth = pathname === '/auth'
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
 
   return (
     <><SearchProvider>
