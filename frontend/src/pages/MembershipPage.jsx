@@ -158,9 +158,6 @@ function MembershipPage() {
         
         <div className="mx-auto max-w-5xl">
           <div className="mb-16 text-center">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#6fb1d2]">
-              Premium Membership
-            </p>
             <h1 className="mt-3 text-4xl font-black sm:text-5xl">
               Unlock Exclusive Benefits
             </h1>
