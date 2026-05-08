@@ -81,8 +81,8 @@ function App() {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Route>
-        <Analytics />
       </Routes>
+      <Analytics />
     </BrowserRouter>
   )
 }
