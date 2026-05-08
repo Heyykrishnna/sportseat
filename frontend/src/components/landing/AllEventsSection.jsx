@@ -44,7 +44,7 @@ function AllEventsSection() {
         </div>
         <Link 
           to="/events" 
-          className="inline-flex items-center gap-2 rounded-full border-2 border-[#172421] px-6 py-3 text-sm font-black text-[#172421] transition hover:bg-[#172421] hover:text-white"
+          className="inline-flex items-center gap-2 rounded-full border-2 border-[#172421] px-6 py-3 text-sm font-black text-[#172421] transition hover:text-white"
         >
           View All Events
           <span>→</span>
