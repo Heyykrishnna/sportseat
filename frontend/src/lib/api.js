@@ -190,6 +190,78 @@ export async function getBookingByReference(bookingReference) {
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+function getStoredSession() {
+  try {
+    const rawSession = localStorage.getItem('auth_session')
+    if (rawSession) {
+      return JSON.parse(rawSession)
+    }
+  } catch {
+    return null
+  }
+  return null
+}
+
+async function getSupabaseAccessToken() {
+  const session = getStoredSession()
+
+  if (!session?.access_token) {
+    return SUPABASE_ANON_KEY
+  }
+
+  const now = Math.floor(Date.now() / 1000)
+  const hasFreshToken = typeof session.expires_at === 'number' && session.expires_at > now + 30
+  if (hasFreshToken) {
+    return session.access_token
+  }
+
+  if (!session.refresh_token) {
+    localStorage.removeItem('auth_session')
+    throw new Error('Session expired. Please sign in again.')
+  }
+
+  const refreshResp = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=refresh_token`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: SUPABASE_ANON_KEY,
+    },
+    body: JSON.stringify({ refresh_token: session.refresh_token }),
+  })
+
+  const refreshPayload = await refreshResp.json().catch(() => ({}))
+
+  if (!refreshResp.ok || !refreshPayload?.access_token) {
+    localStorage.removeItem('auth_session')
+    localStorage.removeItem('auth_user')
+    throw new Error('Session expired. Please sign in again.')
+  }
+
+  const nextSession = {
+    access_token: refreshPayload.access_token,
+    refresh_token: refreshPayload.refresh_token || session.refresh_token,
+    expires_at: refreshPayload.expires_at,
+  }
+
+  localStorage.setItem('auth_session', JSON.stringify(nextSession))
+  if (refreshPayload.user) {
+    localStorage.setItem('auth_user', JSON.stringify(refreshPayload.user))
+  }
+
+  return nextSession.access_token
+}
+
+async function getSupabaseAuthHeaders(extraHeaders = {}) {
+  const authToken = await getSupabaseAccessToken()
+
+  return {
+    'Content-Type': 'application/json',
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${authToken}`,
+    ...extraHeaders,
+  }
+}
+
 async function createEventViaSupabase(eventData, apiError) {
   const { tags, gallery, highlights, ...eventCore } = eventData
 
@@ -198,14 +270,10 @@ async function createEventViaSupabase(eventData, apiError) {
     highlights: Array.isArray(highlights) ? highlights : [],
   }
 
+  const eventHeaders = await getSupabaseAuthHeaders({ Prefer: 'return=representation' })
   const eventResp = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      Prefer: 'return=representation',
-    },
+    headers: eventHeaders,
     body: JSON.stringify(eventPayload),
   })
 
@@ -222,13 +290,10 @@ async function createEventViaSupabase(eventData, apiError) {
   }
 
   if (Array.isArray(tags) && tags.length > 0) {
+    const tagHeaders = await getSupabaseAuthHeaders()
     const tagResp = await fetch(`${SUPABASE_URL}/rest/v1/event_tags`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
+      headers: tagHeaders,
       body: JSON.stringify(tags.map((tag) => ({ event_id: createdEvent.id, tag }))),
     })
 
@@ -238,13 +303,10 @@ async function createEventViaSupabase(eventData, apiError) {
   }
 
   if (Array.isArray(gallery) && gallery.length > 0) {
+    const galleryHeaders = await getSupabaseAuthHeaders()
     const galleryResp = await fetch(`${SUPABASE_URL}/rest/v1/event_gallery`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      },
+      headers: galleryHeaders,
       body: JSON.stringify(
         gallery.map((imageUrl, index) => ({
           event_id: createdEvent.id,
