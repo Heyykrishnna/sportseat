@@ -1,5 +1,6 @@
 import basketballHero from '../../assets/landing/basketball-hero.png'
 import { useSearch } from '../../context/SearchContext'
+import { Link } from 'react-router-dom'
 
 function Hero() {
   const { openSearch } = useSearch()
@@ -20,12 +21,12 @@ function Hero() {
               Organize and Join The Tournaments
             </h1>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a
+              <Link
+                to="/events"
                 className="rounded-full border font-light border-[#172421] px-6 py-3 text-sm text-[#172421] transition"
-                href="#tournaments"
               >
-                Create Tournament
-              </a>
+                Create Event
+              </Link>
               <a
                 className="rounded-full border border-white/60 px-6 py-3 text-sm font-light text-white backdrop-blur transition hover:bg-white/12"
                 href="#guide"
