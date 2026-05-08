@@ -20,42 +20,82 @@ function MembershipPage() {
     {
       icon: Star,
       title: 'Priority Seating',
-      description: 'Access to premium and VIP sections before general public'
+      description: 'Access to premium and VIP sections before general public',
+      details: [
+        'Guaranteed best available seats',
+        'Reserved premium section access',
+        'Priority upgrade options'
+      ]
     },
     {
       icon: Zap,
       title: 'Early Bird Discounts',
-      description: 'Get exclusive discounts on ticket prices for members only'
+      description: 'Get exclusive discounts on ticket prices for members only',
+      details: [
+        'Up to 25% off regular prices',
+        'Flash sales every week',
+        'Seasonal discount campaigns'
+      ]
     },
     {
       icon: Clock,
       title: 'Early Access',
-      description: 'Book tickets 24 hours before public release'
+      description: 'Book tickets 24-48 hours before public release',
+      details: [
+        'First pick of available seats',
+        'Priority queue access',
+        'Extended booking window'
+      ]
     },
     {
       icon: Ticket,
       title: 'Exclusive Events',
-      description: 'Access to private member-only sporting events'
+      description: 'Access to private member-only sporting events',
+      details: [
+        'Members-only tournaments',
+        'Behind-the-scenes experiences',
+        'Meet & greet opportunities'
+      ]
     },
     {
       icon: Users,
       title: 'Group Bookings',
-      description: 'Special rates for group ticket purchases and group events'
+      description: 'Special rates for group ticket purchases and events',
+      details: [
+        'Discounts on bulk purchases',
+        'Reserved group sections',
+        'Dedicated group coordinator'
+      ]
     },
     {
       icon: Award,
       title: 'Loyalty Rewards',
-      description: 'Earn points on every purchase and redeem for tickets'
+      description: 'Earn points on every purchase and redeem for tickets',
+      details: [
+        '1 point per rupee spent',
+        'Exclusive tier benefits',
+        'Monthly redemption options'
+      ]
     },
     {
       icon: Shield,
       title: 'Buyer Protection',
-      description: 'Full refund guarantee and secure payment protection'
+      description: 'Full refund guarantee and secure payment protection',
+      details: [
+        '30-day money-back guarantee',
+        'Fraud protection included',
+        'Ticket cancellation insurance'
+      ]
     },
     {
       icon: Crown,
       title: 'VIP Support',
-      description: '24/7 priority customer support dedicated to members'
+      description: '24/7 priority customer support dedicated to members',
+      details: [
+        'Dedicated support team',
+        'Phone & chat availability',
+        'Priority ticket resolution'
+      ]
     }
   ]
 
@@ -143,18 +183,30 @@ function MembershipPage() {
                 {perks.map((perk, index) => (
                   <div 
                     key={index}
-                    className="flex gap-4 rounded-2xl border border-[#dfe3dc] bg-white p-5 transition hover:border-[#6fb1d2] hover:shadow-md"
+                    className="rounded-2xl border border-[#dfe3dc] bg-white p-6 transition hover:border-[#6fb1d2] hover:shadow-md"
                   >
-                    <div className="flex-shrink-0">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#edf4f7]">
-                        <perk.icon className="h-5 w-5 text-[#6fb1d2]" />
+                    <div className="flex items-start gap-4">
+                      <div className="flex-shrink-0">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#edf4f7]">
+                          <perk.icon className="h-5 w-5 text-[#6fb1d2]" />
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-black text-[#172421]">{perk.title}</h3>
-                      <p className="mt-1 text-xs font-semibold text-[#68736f]">
-                        {perk.description}
-                      </p>
+                      <div className="flex-1">
+                        <h3 className="font-black text-[#172421]">{perk.title}</h3>
+                        <p className="mt-1 text-xs font-semibold text-[#68736f]">
+                          {perk.description}
+                        </p>
+                        <div className="mt-4 space-y-2">
+                          {perk.details.map((detail, idx) => (
+                            <div key={idx} className="flex items-center gap-2.5">
+                              <span className="h-1.5 w-1.5 rounded-full bg-[#6fb1d2] flex-shrink-0 mt-0.5" />
+                              <span className="text-xs font-semibold text-[#172421]">
+                                {detail}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
