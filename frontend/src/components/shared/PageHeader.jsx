@@ -7,7 +7,6 @@ const navItems = [
   { label: 'Events', href: '/events' },
   { label: 'Create Event', href: '/admin/events/new' },
   { label: 'Terms & Conditions', href: '/terms' },
-  { label: 'FAQ', href: '/faq' },
 ]
 
 function PageHeader({ transparent = false, showSearchIcon = false }) {
