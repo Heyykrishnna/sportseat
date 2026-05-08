@@ -8,6 +8,7 @@ import Mytickets from './pages/Navicons/Mytickets'
 import AdminCreateEventPage from './pages/AdminCreateEventPage'
 import AuthPage from './pages/AuthPage'
 import ProfilePage from './pages/ProfilePage'
+import MembershipPage from './pages/MembershipPage'
 import PageHeader from './components/shared/PageHeader'
 import TermsPage from './pages/TermsPage'
 import AboutPage from './pages/AboutPage'
@@ -75,6 +76,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/membership" 
+            element={
+              <ProtectedRoute>
+                <MembershipPage />
               </ProtectedRoute>
             } 
           />

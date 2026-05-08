@@ -11,7 +11,8 @@ import {
   Mail, 
   Calendar,
   MapPin,
-  ShieldCheck
+  ShieldCheck,
+  Crown
 } from 'lucide-react'
 
 function ProfilePage() {
@@ -58,6 +59,7 @@ function ProfilePage() {
   const navItems = [
     { id: 'account', label: 'Account Details', icon: User },
     { id: 'tickets', label: 'My Bookings', icon: Ticket },
+    { id: 'membership', label: 'Membership', icon: Crown },
     { id: 'settings', label: 'Settings', icon: Settings },
   ]
 
@@ -163,9 +165,12 @@ function ProfilePage() {
                   <div className="mt-12 rounded-2xl bg-[#172421] p-8 text-white">
                     <h3 className="text-xl font-black">Membership Perks</h3>
                     <p className="mt-2 text-sm font-semibold text-white/70">As a SportSeat member, you get priority access to premium stadium seating and early bird discounts.</p>
-                    <button className="mt-6 rounded-full bg-[#6fb1d2] px-6 py-3 text-xs font-black uppercase tracking-widest transition hover:bg-white hover:text-[#172421]">
+                    <Link 
+                      to="/membership"
+                      className="mt-6 inline-block rounded-full bg-[#6fb1d2] px-6 py-3 text-xs font-black uppercase tracking-widest text-white transition hover:bg-white hover:text-[#172421]"
+                    >
                       Upgrade to Premium
-                    </button>
+                    </Link>
                   </div>
                 </div>
               )}
@@ -240,6 +245,72 @@ function ProfilePage() {
                        </Link>
                     </div>
                   )}
+                </div>
+              )}
+
+              {activeSection === 'membership' && (
+                <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#6fb1d2]">Premium</p>
+                  <h1 className="mt-2 text-3xl font-black">Membership</h1>
+                  
+                  <div className="mt-10 rounded-3xl border border-[#dfe3dc] bg-[#edf4f7] p-8">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="text-xl font-black text-[#172421]">Current Status: Free Member</h3>
+                        <p className="mt-2 text-sm font-semibold text-[#68736f]">
+                          Upgrade to unlock exclusive perks and priority access
+                        </p>
+                      </div>
+                      <div className="rounded-full bg-white px-4 py-2">
+                        <span className="text-xs font-black uppercase tracking-widest text-[#6fb1d2]">Free</span>
+                      </div>
+                    </div>
+
+                    <Link 
+                      to="/membership"
+                      className="mt-6 inline-block rounded-full bg-[#6fb1d2] px-8 py-3 text-xs font-black uppercase tracking-widest text-white transition hover:bg-[#5a9ec2]"
+                    >
+                      View All Plans
+                    </Link>
+                  </div>
+
+                  <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-2xl border border-[#dfe3dc] bg-white p-6">
+                      <h4 className="font-black text-[#172421]">Your Benefits</h4>
+                      <ul className="mt-4 space-y-3">
+                        <li className="flex items-center gap-3 text-sm font-semibold">
+                          <span className="h-2 w-2 rounded-full bg-[#6fb1d2]" />
+                          Access to all events
+                        </li>
+                        <li className="flex items-center gap-3 text-sm font-semibold">
+                          <span className="h-2 w-2 rounded-full bg-[#6fb1d2]" />
+                          Basic booking management
+                        </li>
+                        <li className="flex items-center gap-3 text-sm font-semibold">
+                          <span className="h-2 w-2 rounded-full bg-[#6fb1d2]" />
+                          Email support
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="rounded-2xl border border-[#dfe3dc] bg-white p-6">
+                      <h4 className="font-black text-[#172421]">Upgrade & Get</h4>
+                      <ul className="mt-4 space-y-3">
+                        <li className="flex items-center gap-3 text-sm font-semibold">
+                          <span className="h-2 w-2 rounded-full bg-[#86a35f]" />
+                          Up to 25% discounts
+                        </li>
+                        <li className="flex items-center gap-3 text-sm font-semibold">
+                          <span className="h-2 w-2 rounded-full bg-[#86a35f]" />
+                          Early access (24-48 hours)
+                        </li>
+                        <li className="flex items-center gap-3 text-sm font-semibold">
+                          <span className="h-2 w-2 rounded-full bg-[#86a35f]" />
+                          Priority VIP support
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               )}
 
