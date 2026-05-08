@@ -11,6 +11,7 @@ import ProfilePage from './pages/ProfilePage'
 import PageHeader from './components/shared/PageHeader'
 import TermsPage from './pages/TermsPage'
 import AboutPage from './pages/AboutPage'
+import { Analytics } from '@vercel/analytics/react';
 
 function ProtectedRoute({ children }) {
   const user = localStorage.getItem('auth_user')
@@ -80,7 +81,7 @@ function App() {
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/about" element={<AboutPage />} />
         </Route>
-
+        <Analytics />
       </Routes>
     </BrowserRouter>
   )
