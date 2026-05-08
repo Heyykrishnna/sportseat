@@ -37,14 +37,21 @@ export async function getMyTickets(email) {
 }
 
 export async function createEvent(eventData) {
-  const payload = await request('/api/events', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(eventData),
-  })
-  return payload.data
+  try {
+    const payload = await request('/api/events', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(eventData),
+    })
+    return payload.data
+  } catch (apiError) {
+    if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+      throw apiError
+    }
+    return createEventViaSupabase(eventData, apiError)
+  }
 }
 
 export async function createBooking(bookingData) {
@@ -182,6 +189,78 @@ export async function getBookingByReference(bookingReference) {
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY
+
+async function createEventViaSupabase(eventData, apiError) {
+  const { tags, gallery, highlights, ...eventCore } = eventData
+
+  const eventPayload = {
+    ...eventCore,
+    highlights: Array.isArray(highlights) ? highlights : [],
+  }
+
+  const eventResp = await fetch(`${SUPABASE_URL}/rest/v1/events`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      Prefer: 'return=representation',
+    },
+    body: JSON.stringify(eventPayload),
+  })
+
+  if (!eventResp.ok) {
+    const errorPayload = await eventResp.json().catch(() => ({}))
+    throw new Error(errorPayload.message || errorPayload.error || apiError.message || 'Failed to create event')
+  }
+
+  const rows = await eventResp.json()
+  const createdEvent = rows?.[0]
+
+  if (!createdEvent?.id) {
+    throw new Error('Event was created but no event ID was returned')
+  }
+
+  if (Array.isArray(tags) && tags.length > 0) {
+    const tagResp = await fetch(`${SUPABASE_URL}/rest/v1/event_tags`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify(tags.map((tag) => ({ event_id: createdEvent.id, tag }))),
+    })
+
+    if (!tagResp.ok) {
+      console.error('Error creating event tags via Supabase fallback')
+    }
+  }
+
+  if (Array.isArray(gallery) && gallery.length > 0) {
+    const galleryResp = await fetch(`${SUPABASE_URL}/rest/v1/event_gallery`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: SUPABASE_ANON_KEY,
+        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+      },
+      body: JSON.stringify(
+        gallery.map((imageUrl, index) => ({
+          event_id: createdEvent.id,
+          image_url: imageUrl,
+          sort_order: index,
+        })),
+      ),
+    })
+
+    if (!galleryResp.ok) {
+      console.error('Error creating event gallery via Supabase fallback')
+    }
+  }
+
+  return createdEvent
+}
 
 export async function login(email, password) {
   const response = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
