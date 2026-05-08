@@ -337,16 +337,7 @@ const SeatBookingPage = () => {
                     <p className="text-sm font-bold text-gray-900">{confirmationEmail}</p>
                   </div>
                 </div>
-                <div className="flex gap-3">
-                  <button className="flex items-center gap-2 bg-white border border-gray-200 px-5 py-3 rounded-2xl text-xs font-black text-gray-600 hover:bg-gray-50 transition-all active:scale-95">
-                    <Share2 className="w-4 h-4" />
-                    Share
-                  </button>
-                  <button className="flex items-center gap-2 bg-white border border-gray-200 px-5 py-3 rounded-2xl text-xs font-black text-gray-600 hover:bg-gray-50 transition-all active:scale-95">
-                    <Download className="w-4 h-4" />
-                    Download
-                  </button>
-                </div>
+                
               </div>
             </div>
 
