@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 const navItems = [
   {name: 'Events', path: "/events"},
   {name: 'My Tickets', path: "/mytickets"},
-  {name: 'FAQ', path: "/faq"}
+  {name: 'FAQ', path: "#faq"}
 ]
 
 function Header() {

@@ -3,7 +3,7 @@ const footerLinks = ['About', 'Events', 'Pricing', 'Support']
 
 function CTAFooter() {
   return (
-    <footer id="faq" className="relative overflow-hidden bg-white px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+    <footer id="site-footer" className="relative overflow-hidden bg-white px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-[#edf4f7]/80 via-white to-white pointer-events-none" />
 
       <div className="relative z-10 mx-auto mt-28 max-w-7xl grid gap-10 border-t border-[#dfe3dc] pt-12 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
