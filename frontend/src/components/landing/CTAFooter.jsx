@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-const footerLinks = ['About', 'Events', 'Pricing', 'Support']
+const footerLinks = ['About', 'Events', 'Support']
 
 function CTAFooter() {
   return (
@@ -14,16 +14,27 @@ function CTAFooter() {
           </p>
         </div>
         
-        <div className="flex flex-wrap gap-4">
-          {footerLinks.map((link) => (
-            <a 
-              key={link} 
-              className="rounded-full border border-[#dfe3dc] bg-white px-7 py-3 text-sm font-black text-[#172421] transition-all duration-300 hover:border-[#172421] hover:text-white hover:-translate-y-1 hover:shadow-lg" 
-              href="#top"
-            >
-              {link}
-            </a>
-          ))}
+        <div className="flex">
+          {footerLinks.map((link, index) => {
+            const routes = {
+              'About': '/about',
+              'Events': '/events',
+              'Support': '/terms'
+            }
+            return (
+              <Link 
+                key={link} 
+                to={routes[link]}
+                className={`border border-[#dfe3dc] bg-white px-7 py-3 text-sm font-black text-[#172421] transition-all duration-300 hover:border-[#172421] hover:text-white hover:-translate-y-1 hover:shadow-lg ${
+                  index === 0 ? 'rounded-l-full' : ''
+                } ${
+                  index === footerLinks.length - 1 ? 'rounded-r-full' : ''
+                }`}
+              >
+                {link}
+              </Link>
+            )
+          })}
         </div>
       </div>
 
